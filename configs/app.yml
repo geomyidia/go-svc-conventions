@@ -1,0 +1,7 @@
+httpd:
+  port: 1515
+  host: localhost
+grpc:
+database:
+  file-based:
+    directory: ./data  
