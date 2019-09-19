@@ -1,21 +1,18 @@
 package logging
 
 import (
-	cfg "github.com/spf13/viper"
+	"github.com/geomyidia/go-svc-conventions/cfg"
 	log "github.com/sirupsen/logrus"
 	logger "github.com/geomyidia/zylog/logger"
 )
 
-func init() {
-	logger.SetupLogging(&logger.ZyLogOptions{
-		Colored:      cfg.GetBool("logging.colored"),
-		Level:        cfg.GetString("logging.level"),
-		Output:       cfg.GetString("logging.output"),
-		ReportCaller: cfg.GetBool("logging.report-caller"),
-	})
+// Setup ...
+func Setup(config *cfg.Config) {
+	logger.SetupLogging(config.Logging)
 }
 
 // Load pretends that the global is more functional in nature ...
-func Load() *log.Logger {
+func Load(config *cfg.Config) *log.Logger {
+	Setup(config)
 	return log.StandardLogger()
 }

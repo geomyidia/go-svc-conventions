@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	cfg "github.com/spf13/viper"
+	logger "github.com/geomyidia/zylog/logger"
 )
 
 // Configuration related constants
@@ -56,6 +57,7 @@ type Config struct {
 	HTTPD HTTPDConfig
 	DB    FileDBConfig
 	GRPCD GRPCDConfig
+	Logging *logger.ZyLogOptions
 }
 
 // NewConfig ...
@@ -72,6 +74,12 @@ func NewConfig() *Config {
 		GRPCD: GRPCDConfig{
 			Host: cfg.GetString("grpc.host"),
 			Port: cfg.GetInt("grpc.port"),
+		},
+		Logging: &logger.ZyLogOptions{
+			Colored:      cfg.GetBool("logging.colored"),
+			Level:        cfg.GetString("logging.level"),
+			Output:       cfg.GetString("logging.output"),
+			ReportCaller: cfg.GetBool("logging.report-caller"),
 		},
 	}
 }

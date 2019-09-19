@@ -9,10 +9,12 @@ import (
 )
 
 func main() {
+	// Create the client objects and assign components to it
 	c := new(client.Client)
 	c.Config = cfg.NewConfig()
-	c.Logger = logger.Load()
+	c.Logger = logger.Load(c.Config)
 
+	// Perform client setup and then issue the parsed command
 	c.SetupConnection()
 	defer c.Close()
 	c.ParseArgs(os.Args)

@@ -13,7 +13,7 @@ func main() {
 	// Create the application objects and assign components to it
 	a := new(app.Application)
 	a.Config = cfg.NewConfig()
-	a.Logger = logger.Load()
+	a.Logger = logger.Load(a.Config)
 	a.HTTPD = echo.New()
 	a.GRPCD = reverb.New()
 
