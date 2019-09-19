@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/geomyidia/go-svc-conventions/app/handlers"
 	"github.com/geomyidia/go-svc-conventions/components"
 	"github.com/geomyidia/reverb"
 	log "github.com/sirupsen/logrus"
@@ -17,9 +18,10 @@ type Application struct {
 // SetHTTPDRoutes ...
 func (a *Application) SetHTTPDRoutes() {
 	log.Debug("Setting up HTTPD routes ...")
-	a.HTTPD.POST("/rest/echo", Echo)
-	a.HTTPD.GET("/rest/health", Health)
-	a.HTTPD.GET("/rest/ping", Ping)
+	s := handlers.NewHTTPHandlerServer()
+	a.HTTPD.POST("/rest/echo", s.Echo)
+	a.HTTPD.GET("/rest/health", s.Health)
+	a.HTTPD.GET("/rest/ping", s.Ping)
 	log.Info("HTTPD routes set up.")
 }
 
@@ -35,7 +37,7 @@ func (a *Application) SetHTTPDMiddleware() {
 // SetupgRPCImplementation ...
 func (a *Application) SetupgRPCImplementation(r *reverb.Reverb) {
 	log.Debug("Setting up gRPC implementation ...")
-	s := NewExampleServer()
+	s := handlers.NewGRPCHandlerServer()
 	s.RegisterServer(r.GRPCServer)
 	log.Info("gRPC implementation set up.")
 }

@@ -13,6 +13,7 @@ In particular, what I have used this example repo to demonstrate are the followi
 * Embed this in a struct as a "server" (the term Mat Ryer uses) or as an "application" (the term I use in this repo)
 * Provide both reuse and symmetry between server and client code
 * Put in place mechanisms that facilitate lower-effort, lower-impact future refactorings
+* Provide symmetry between HTTP and gRPC handlers (note that business logic should be done elsewhere! then called via imported functions inside your handlers)
 * Pull config into memory
 
 ## Build and Run

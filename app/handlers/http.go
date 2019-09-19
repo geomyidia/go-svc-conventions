@@ -1,4 +1,4 @@
-package app
+package handlers
 
 import (
 	"fmt"
@@ -14,14 +14,22 @@ type HealthData struct {
 	Errors   string `json:"errors"`
 }
 
+// HTTPHandlerServer ...
+type HTTPHandlerServer struct {}
+
+// NewHTTPHandlerServer ...
+func NewHTTPHandlerServer() *HTTPHandlerServer {
+	return &HTTPHandlerServer{}
+}
+
 // Echo ...
-func Echo(ctx echo.Context) (err error) {
+func (s *HTTPHandlerServer) Echo(ctx echo.Context) (err error) {
 	echoed, _ := ioutil.ReadAll(ctx.Request().Body)
 	return ctx.String(http.StatusOK, fmt.Sprintf("%s", echoed))
 }
 
 // Health ...
-func Health(ctx echo.Context) (err error) {
+func (s *HTTPHandlerServer) Health(ctx echo.Context) (err error) {
 	h := &HealthData{
 		Services: "OK",
 		Errors:   "NULL",
@@ -30,6 +38,6 @@ func Health(ctx echo.Context) (err error) {
 }
 
 // Ping ...
-func Ping(ctx echo.Context) (err error) {
+func (s *HTTPHandlerServer) Ping(ctx echo.Context) (err error) {
 	return ctx.String(http.StatusOK, "pong")
 }
