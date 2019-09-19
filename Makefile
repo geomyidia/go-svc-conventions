@@ -18,5 +18,7 @@ clean-all:
 run: build
 	@./bin/app
 
-protoc-gen:
-	@protoc -I =app/grpc --go_out=plugins=grpc:app/grpc app/grpc/app.proto
+protoc-gen: api/*.pb.go
+
+api/%.pb.go: api/%.proto 
+	@protoc -I =api --go_out=plugins=grpc:api $<

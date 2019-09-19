@@ -14,4 +14,4 @@
 # Don't add
 /bin
 /vendor
-
+/api/*.pb.go

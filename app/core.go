@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/geomyidia/go-svc-conventions/app/grpc"
 	"github.com/geomyidia/go-svc-conventions/components"
 	"github.com/geomyidia/reverb"
 	log "github.com/sirupsen/logrus"
@@ -36,7 +35,7 @@ func (a *Application) SetHTTPDMiddleware() {
 // SetupgRPCImplementation ...
 func (a *Application) SetupgRPCImplementation(r *reverb.Reverb) {
 	log.Debug("Setting up gRPC implementation ...")
-	s := grpc.New()
+	s := NewExampleServer()
 	s.RegisterServer(r.GRPCServer)
 	log.Info("gRPC implementation set up.")
 }

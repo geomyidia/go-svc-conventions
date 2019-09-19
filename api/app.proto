@@ -4,7 +4,7 @@ option java_multiple_files = true;
 option java_package = "oubiwann.go.service.conventions";
 option java_outer_classname = "GrpcExampleProto";
 
-package grpc;
+package api;
 
 // Interface exported by the server.
 service ServiceExample {

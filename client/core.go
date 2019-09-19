@@ -8,7 +8,7 @@ import (
 	"google.golang.org/grpc"
 
 	"github.com/geomyidia/go-svc-conventions/components"
-	pb "github.com/geomyidia/go-svc-conventions/app/grpc"
+	pb "github.com/geomyidia/go-svc-conventions/api"
 	log "github.com/sirupsen/logrus"
 )
 
