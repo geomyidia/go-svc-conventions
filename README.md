@@ -11,7 +11,9 @@ In particular, what I have used this example repo to demonstrate are the followi
 
 * Encapulate the different ways in which you want to assemble your code using "components"
 * Embed this in a struct as a "server" (the term Mat Ryer uses) or as an "application" (the term I use in this repo)
-* XXX
+* Provide both reuse and symmetry between server and client code
+* Put in place mechanisms that facilitate lower-effort, lower-impact future refactorings
+* Pull config into memory
 
 ## Build and Run
 
