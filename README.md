@@ -1,5 +1,18 @@
 # go-svc-conventions
 
+## Key Concetps
+
+Much of this has been taken from my long experiences in the world of non-Go services, but is validated by long-time Go hackers with very similar and pragmatic views:
+
+* [https://medium.com/statuscode/how-i-write-go-http-services-after-seven-years-37c208122831](https://medium.com/statuscode/how-i-write-go-http-services-after-seven-years-37c208122831)
+* [https://www.youtube.com/watch?v=rWBSMsLG8po](https://www.youtube.com/watch?v=rWBSMsLG8po)
+
+In particular, what I have used this example repo to demonstrate are the following:
+
+* Encapulate the different ways in which you want to assemble your code using "components"
+* Embed this in a struct as a "server" (the term Mat Ryer uses) or as an "application" (the term I use in this repo)
+* XXX
+
 ## Build and Run
 
 ```shell

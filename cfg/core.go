@@ -59,6 +59,7 @@ type Config struct {
 }
 
 // NewConfig ...
+// XXX Fod: does Viper provide something like this that we could use?
 func NewConfig() *Config {
 	return &Config{
 		HTTPD: HTTPDConfig{

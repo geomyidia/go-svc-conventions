@@ -9,7 +9,9 @@ import (
 )
 
 // ExampleServerImpl ...
-type ExampleServerImpl struct {}
+type ExampleServerImpl struct {
+	UnimplementedServiceExampleServer
+}
 
 // New ...
 func New() *ExampleServerImpl {
@@ -37,5 +39,4 @@ func (s *ExampleServerImpl) Ping(ctx context.Context, in *PingRequest) (*PingRep
 // RegisterServer ...
 func (s *ExampleServerImpl) RegisterServer(grpcServer *grpc.Server) {
 	RegisterServiceExampleServer(grpcServer, s)
-
 }
