@@ -45,15 +45,17 @@ type FileDBConfig struct {
 	Directory string
 }
 
-// GRPCConfig ...
-type GRPCConfig struct {
+// GRPCDConfig ...
+type GRPCDConfig struct {
+	Host string
+	Port int
 }
 
 // Config ...
 type Config struct {
 	HTTPD HTTPDConfig
 	DB    FileDBConfig
-	GRPC  GRPCConfig
+	GRPCD GRPCDConfig
 }
 
 // NewConfig ...
@@ -65,6 +67,10 @@ func NewConfig() *Config {
 		},
 		DB: FileDBConfig{
 			Directory: cfg.GetString("database.file-based.directory"),
+		},
+		GRPCD: GRPCDConfig{
+			Host: cfg.GetString("grpc.host"),
+			Port: cfg.GetInt("grpc.port"),
 		},
 	}
 }

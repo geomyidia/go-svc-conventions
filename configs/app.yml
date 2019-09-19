@@ -2,6 +2,13 @@ httpd:
   port: 1515
   host: localhost
 grpc:
+  port: 2525
+  host: localhost
 database:
   file-based:
     directory: ./data  
+logging:
+  colored: true
+  level: debug
+  output: stdout
+  report-caller: true

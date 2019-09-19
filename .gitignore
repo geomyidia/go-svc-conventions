@@ -11,5 +11,7 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
-# No deps in repo
+# Don't add
+/bin
 /vendor
+

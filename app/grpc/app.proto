@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "oubiwann.go.service.conventions";
+option java_outer_classname = "GrpcExampleProto";
+
+package grpc;
+
+// Interface exported by the server.
+service ServiceExample {
+  // Respond with what we got
+  rpc Echo(GenericData) returns (GenericData) {}
+  // Return server health status
+  rpc Health(HealthRequest) returns (HealthReply) {}
+  // Return "pong" for "ping"
+  rpc Ping(PingRequest) returns (PingReply) {}
+}
+
+// GenericData ...
+message GenericData {
+  string data = 1;
+}
+
+// HealthRequest ...
+message HealthRequest {
+  string data = 1;
+}
+
+// HealthReply ...
+message HealthReply {
+  string services = 1;
+  string errors = 2;
+}
+
+// PingRequest ...
+message PingRequest {
+  string data = 1;
+}
+
+// PingReply ...
+message PingReply {
+  string data = 1;
+}

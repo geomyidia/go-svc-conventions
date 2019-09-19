@@ -13,6 +13,17 @@ Or, to run with a different HTTP port:
 $ APP_HTTPD_PORT=5151 make run 
 ```
 
+Checking with `curl`:
+
+```shell
+$ curl http://localhost:1515/rest/ping
+```
+```
+pong
+```
+
+## Development
+
 If you'd like to pull the deps into `vendor` dir:
 
 ```shell
