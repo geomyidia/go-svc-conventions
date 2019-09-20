@@ -2,20 +2,20 @@ package components
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/geomyidia/go-svc-conventions/cfg"
-	logger "github.com/sirupsen/logrus"
+	"github.com/geomyidia/go-svc-conventions/components/config"
 	"github.com/geomyidia/reverb"
+	logger "github.com/sirupsen/logrus"
 )
 
 // Base component collection
 type Base struct {
-	Config *cfg.Config
+	Config *config.Config
 	Logger *logger.Logger
 }
 
 // TestBase component that keeps stdout clean
 type TestBase struct {
-	Config *cfg.Config
+	Config *config.Config
 }
 
 // Default component collection

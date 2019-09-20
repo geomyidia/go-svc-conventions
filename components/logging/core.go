@@ -1,18 +1,18 @@
 package logging
 
 import (
-	"github.com/geomyidia/go-svc-conventions/cfg"
 	log "github.com/sirupsen/logrus"
-	logger "github.com/geomyidia/zylog/logger"
+	"github.com/geomyidia/go-svc-conventions/components/config"
+	"github.com/geomyidia/zylog/logger"
 )
 
 // Setup ...
-func Setup(config *cfg.Config) {
-	logger.SetupLogging(config.Logging)
+func Setup(cfg *config.Config) {
+	logger.SetupLogging(cfg.Logging)
 }
 
 // Load pretends that the global is more functional in nature ...
-func Load(config *cfg.Config) *log.Logger {
-	Setup(config)
+func Load(cfg *config.Config) *log.Logger {
+	Setup(cfg)
 	return log.StandardLogger()
 }
