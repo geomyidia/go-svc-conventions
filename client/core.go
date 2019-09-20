@@ -23,7 +23,7 @@ type Client struct {
 
 // SetupConnection ...
 func (c *Client) SetupConnection() {
-	connectionOpts := fmt.Sprintf("%s:%d", c.Config.GRPCD.Host, c.Config.GRPCD.Port)
+	connectionOpts := c.Config.GRPCConnectionString()
 	conn, err := grpc.Dial(connectionOpts, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect to gRPC server: %v", err)

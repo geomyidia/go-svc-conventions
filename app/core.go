@@ -1,8 +1,6 @@
 package app
 
 import (
-	"fmt"
-
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/geomyidia/go-svc-conventions/app/handlers"
 	"github.com/geomyidia/go-svc-conventions/components"
@@ -45,7 +43,7 @@ func (a *Application) SetupgRPCImplementation(r *reverb.Reverb) {
 // StartgRPCD ...
 func (a *Application) StartgRPCD() {
 	log.Debug("Starting gRPC daemon ...")
-	serverOpts := fmt.Sprintf("%s:%d", a.Config.GRPCD.Host, a.Config.GRPCD.Port)
+	serverOpts := a.Config.GRPCConnectionString()
 	server := a.GRPCD.Start(serverOpts)
 	a.SetupgRPCImplementation(server)
 	go server.Serve()
@@ -55,8 +53,7 @@ func (a *Application) StartgRPCD() {
 // StartHTTPD ...
 func (a *Application) StartHTTPD() {
 	log.Debug("Starting HTTP daemon ...")
-	serverOpts := fmt.Sprintf("%s:%d", a.Config.HTTPD.Host, a.Config.HTTPD.Port)
-	server := a.HTTPD.Start(serverOpts)
+	server := a.HTTPD.Start(a.Config.HTTPConnectionString())
 	a.HTTPD.Logger.Fatal(server)
 }
 

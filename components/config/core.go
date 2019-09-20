@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"strings"
 
 	cfg "github.com/spf13/viper"
@@ -93,4 +94,14 @@ func NewConfig() *Config {
 			ReportCaller: cfg.GetBool("logging.report-caller"),
 		},
 	}
+}
+
+// GRPCConnectionString ...
+func (c *Config) GRPCConnectionString() string {
+	return fmt.Sprintf("%s:%d", c.GRPCD.Host, c.GRPCD.Port)
+}
+
+// HTTPConnectionString ...
+func (c *Config) HTTPConnectionString() string {
+	return fmt.Sprintf("%s:%d", c.HTTPD.Host, c.HTTPD.Port)
 }
