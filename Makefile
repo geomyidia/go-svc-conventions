@@ -19,10 +19,11 @@ bin/%: cmd/%/main.go
 	@GO111MODULE=on go build -o $@ $<
 
 clean:
-	@rm -rf bin/*
+	@rm -rf bin/* 
 
 clean-all:
 	@go clean --modcache
+	@rm -rf api/*.pb.go
 	
 run: build
 	@./bin/app
@@ -30,7 +31,7 @@ run: build
 protoc-gen: api/*.pb.go
 
 api/%.pb.go: api/%.proto 
-	@protoc -I =api --go_out=plugins=grpc:api $<
+	@protoc -I api --go_out=plugins=grpc:api $<
 
 $(GOLANGCI_LINT):
 	@echo ">> Couldn't find $(GOLANGCI_LINT); installing"
