@@ -63,7 +63,6 @@ $ ./bin/client
 2019-09-19T14:27:58-05:00 INFO [main.main:59] ▶ Reply: PONG
 ```
 
-
 ## Development
 
 If you'd like to pull the deps into `vendor` dir:

@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	// Create the application objects and assign components to it
+	// Create the application object and assign components to it
 	a := new(app.Application)
 	a.Config = cfg.NewConfig()
 	a.Logger = logger.Load(a.Config)
