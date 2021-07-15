@@ -26,16 +26,15 @@ func main() {
 	// Create context that listens for the interrupt signal from the OS.
 	ctx, cancel := util.SignalWithContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer cancel()
+	var wg sync.WaitGroup
 
 	httpDaemon := httpd.SetupServer(a.Config)
 
-	var wg sync.WaitGroup
-
+	// Initializing the HTTP server in its own goroutine and wire to wait group
 	wg.Add(1)
-	// Initializing the server in a goroutine so that
-	// it won't block the graceful shutdown handling below
 	go func() {
 		defer wg.Done()
+		log.Infof("HTTP daemon listening on %s ...", a.Config.HTTPConnectionString())
 		if err := httpDaemon.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("listen: %s\n", err)
 		}

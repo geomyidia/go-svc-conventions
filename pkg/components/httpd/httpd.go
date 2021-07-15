@@ -12,7 +12,7 @@ import (
 // SetupRoutes ...
 func SetupRoutes(cfg *config.Config) *gin.Engine {
 	log.Debug("Setting up HTTPD routes ...")
-	gin.DisableConsoleColor()
+	gin.ForceConsoleColor()
 	router := gin.Default()
 	router.GET("/echo", Echo)
 	router.GET("/health", Health)
