@@ -7,18 +7,18 @@ import (
 
 	"google.golang.org/grpc"
 
-	"github.com/geomyidia/go-svc-conventions/components"
 	pb "github.com/geomyidia/go-svc-conventions/api"
+	"github.com/geomyidia/go-svc-conventions/pkg/components"
 	log "github.com/sirupsen/logrus"
 )
 
 // Client ...
 type Client struct {
 	components.Base
-	GRPCConn *grpc.ClientConn
+	GRPCConn   *grpc.ClientConn
 	GRPCClient pb.ServiceExampleClient
-	Command string
-	Args []string
+	Command    string
+	Args       []string
 }
 
 // SetupConnection ...
@@ -51,7 +51,7 @@ func (c *Client) Close() {
 
 // RunCommand ...
 func (c *Client) RunCommand() {
-	
+
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 

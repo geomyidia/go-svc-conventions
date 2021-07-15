@@ -4,8 +4,8 @@ import (
 	"os"
 
 	"github.com/geomyidia/go-svc-conventions/client"
-	"github.com/geomyidia/go-svc-conventions/components/config"
-	"github.com/geomyidia/go-svc-conventions/components/logging"
+	"github.com/geomyidia/go-svc-conventions/pkg/components/config"
+	"github.com/geomyidia/go-svc-conventions/pkg/components/logging"
 )
 
 func main() {

@@ -1,11 +1,12 @@
 package app
 
 import (
-	"github.com/labstack/echo/v4/middleware"
-	"github.com/geomyidia/go-svc-conventions/app/handlers"
-	"github.com/geomyidia/go-svc-conventions/components"
 	"github.com/geomyidia/reverb"
+	"github.com/labstack/echo/v4/middleware"
 	log "github.com/sirupsen/logrus"
+
+	"github.com/geomyidia/go-svc-conventions/app/handlers"
+	"github.com/geomyidia/go-svc-conventions/pkg/components"
 )
 
 // Application ...
