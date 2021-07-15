@@ -2,19 +2,26 @@
 
 ## Key Concetps
 
-Much of this has been taken from my long experiences in the world of non-Go services, but is validated by long-time Go hackers with very similar and pragmatic views:
+This repo demonstrates the following:
 
-* [https://medium.com/statuscode/how-i-write-go-http-services-after-seven-years-37c208122831](https://medium.com/statuscode/how-i-write-go-http-services-after-seven-years-37c208122831)
-* [https://www.youtube.com/watch?v=rWBSMsLG8po](https://www.youtube.com/watch?v=rWBSMsLG8po)
+* Areas of responsibility separated into application "components" (config, logging, db connections, various servers, etc.)
+* Wait groups and contexts for graceful shutdowns
 
-In particular, what I have used this example repo to demonstrate are the following:
+In particular, what are shown in this code:
 
-* Encapulate the different ways in which you want to assemble your code using "components"
+* Encapsulate the different ways in which you want to assemble your code using "components"
 * Embed this in a struct as a "server" (the term Mat Ryer uses) or as an "application" (the term I use in this repo)
 * Provide both reuse and symmetry between server and client code
 * Put in place mechanisms that facilitate lower-effort, lower-impact future refactorings
 * Provide symmetry between HTTP and gRPC handlers (note that business logic should be done elsewhere! then called via imported functions inside your handlers)
 * Pull config into memory
+
+Much of this has been taken from my long experiences in the world of non-Go fault-tolerant and highly available services, but is validated by long-time Go hackers with very similar and pragmatic views.
+
+Here are some links of interest:
+
+* [https://medium.com/statuscode/how-i-write-go-http-services-after-seven-years-37c208122831](https://medium.com/statuscode/how-i-write-go-http-services-after-seven-years-37c208122831)
+* [https://www.youtube.com/watch?v=rWBSMsLG8po](https://www.youtube.com/watch?v=rWBSMsLG8po)
 
 ## Build and Run
 
@@ -32,7 +39,7 @@ $ APP_HTTPD_PORT=5151 make run
 Checking the HTTP daemon with `curl`:
 
 ```shell
-$ curl http://localhost:1515/rest/ping
+$ curl http://localhost:5099/ping
 ```
 ```
 pong
