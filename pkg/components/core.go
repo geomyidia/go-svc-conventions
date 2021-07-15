@@ -1,10 +1,9 @@
 package components
 
 import (
-	"github.com/labstack/echo/v4"
-	"github.com/geomyidia/go-svc-conventions/components/config"
-	"github.com/geomyidia/reverb"
 	logger "github.com/sirupsen/logrus"
+
+	"github.com/geomyidia/go-svc-conventions/pkg/components/config"
 )
 
 // Base component collection
@@ -21,8 +20,6 @@ type TestBase struct {
 // Default component collection
 type Default struct {
 	Base
-	HTTPD  *echo.Echo
-	GRPCD  *reverb.Reverb
 }
 
 // Add more components here that have more or less than what's done above. This

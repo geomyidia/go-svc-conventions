@@ -2,8 +2,10 @@ package logging
 
 import (
 	log "github.com/sirupsen/logrus"
-	"github.com/geomyidia/go-svc-conventions/components/config"
+
 	"github.com/geomyidia/zylog/logger"
+
+	"github.com/geomyidia/go-svc-conventions/pkg/components/config"
 )
 
 // Setup ...
