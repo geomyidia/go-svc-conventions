@@ -76,7 +76,9 @@ func (s *HTTPHandlerServer) Health(ctx *gin.Context) {
 // Ping ...
 func (s *HTTPHandlerServer) Ping(ctx *gin.Context) {
 	log.Debug("Got ping request")
-	s.Bus.Publish(msgbus.NewEvent("ping", "DATA"))
+	log.Debugf("Available topics: %+v", s.Bus.Topics())
+	event := msgbus.NewEvent("ping", "DATA")
+	s.Bus.Publish(event)
 	ctx.String(http.StatusOK, "pong\n")
 }
 

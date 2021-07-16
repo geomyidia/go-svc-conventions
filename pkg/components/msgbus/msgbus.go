@@ -66,9 +66,9 @@ func (m *MsgBus) Publish(event *Event) {
 	topic := event.Name
 	if topic == WildCardTopic {
 		for _, t := range m.Topics() {
-			m.bus.Publish(t, event.Data)
+			m.bus.Publish(t, event)
 		}
 	} else {
-		m.bus.Publish(topic, event.Data)
+		m.bus.Publish(topic, event)
 	}
 }
