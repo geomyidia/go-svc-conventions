@@ -6,9 +6,9 @@ require (
 	github.com/geomyidia/reverb v0.2.2
 	github.com/geomyidia/zylog v0.1.5
 	github.com/gin-gonic/gin v1.7.2
-	github.com/golang/protobuf v1.3.3
-	github.com/mattn/go-colorable v0.1.2 // indirect
-	github.com/sirupsen/logrus v1.4.0
-	github.com/spf13/viper v1.4.0
-	google.golang.org/grpc v1.23.1
+	github.com/golang/protobuf v1.5.2
+	github.com/sirupsen/logrus v1.8.1
+	github.com/spf13/viper v1.8.1
+	google.golang.org/grpc v1.39.0
+	google.golang.org/protobuf v1.27.1
 )

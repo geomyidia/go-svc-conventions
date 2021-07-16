@@ -1,5 +1,6 @@
 syntax = "proto3";
 
+option go_package = "github.com/geomyidia/go-svc-conventions/api";
 option java_multiple_files = true;
 option java_package = "oubiwann.go.service.conventions";
 option java_outer_classname = "GrpcExampleProto";
@@ -14,6 +15,8 @@ service ServiceExample {
   rpc Health(HealthRequest) returns (HealthReply) {}
   // Return "pong" for "ping"
   rpc Ping(PingRequest) returns (PingReply) {}
+  // Return version data
+  rpc Version(VersionRequest) returns (VersionReply) {}
 }
 
 // GenericData ...
@@ -40,4 +43,18 @@ message PingRequest {
 // PingReply ...
 message PingReply {
   string data = 1;
+}
+
+// VersionRequest ...
+message VersionRequest {
+  string data = 1;
+}
+
+// VersionReply ...
+message VersionReply {
+  string version = 1;
+  string buildDate = 2;
+  string gitCommit = 3;
+  string gitBranch = 4;
+  string gitSummary = 5;
 }

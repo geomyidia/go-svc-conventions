@@ -11,6 +11,7 @@ import (
 
 	pb "github.com/geomyidia/go-svc-conventions/api"
 	"github.com/geomyidia/go-svc-conventions/pkg/components/config"
+	"github.com/geomyidia/go-svc-conventions/pkg/version"
 )
 
 // GRPCHandlerServer ...
@@ -27,6 +28,11 @@ func NewGRPCHandlerServer(cfg *config.GRPCDConfig) *GRPCHandlerServer {
 	s.RegisterServer(r.GRPCServer)
 	s.Server = r
 	return s
+}
+
+// RegisterServer ...
+func (s *GRPCHandlerServer) RegisterServer(grpcServer *grpc.Server) {
+	pb.RegisterServiceExampleServer(grpcServer, s)
 }
 
 // Echo ...
@@ -47,9 +53,18 @@ func (s *GRPCHandlerServer) Ping(ctx context.Context, in *pb.PingRequest) (*pb.P
 	return &pb.PingReply{Data: "PONG"}, nil
 }
 
-// RegisterServer ...
-func (s *GRPCHandlerServer) RegisterServer(grpcServer *grpc.Server) {
-	pb.RegisterServiceExampleServer(grpcServer, s)
+// Version ...
+func (s *GRPCHandlerServer) Version(
+	_ context.Context, in *pb.VersionRequest) (*pb.VersionReply, error) {
+	log.Debugf("Received: %v", in)
+	vsn := version.VersionData()
+	return &pb.VersionReply{
+		Version:    vsn.Semantic,
+		BuildDate:  vsn.BuildDate,
+		GitCommit:  vsn.GitCommit,
+		GitBranch:  vsn.GitBranch,
+		GitSummary: vsn.GitSummary,
+	}, nil
 }
 
 // Serve

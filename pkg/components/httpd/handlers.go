@@ -10,6 +10,7 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"github.com/geomyidia/go-svc-conventions/pkg/components/config"
+	"github.com/geomyidia/go-svc-conventions/pkg/version"
 )
 
 // HTTPHandlerServer ...
@@ -43,13 +44,14 @@ func (s *HTTPHandlerServer) SetupRoutes(cfg *config.HTTPDConfig) {
 	router.POST("/echo", s.Echo)
 	router.GET("/health", s.Health)
 	router.GET("/ping", s.Ping)
+	router.GET("/version", s.Version)
 	s.Routes = router
 }
 
 // Echo ...
 func (s *HTTPHandlerServer) Echo(ctx *gin.Context) {
 	echoData, _ := ioutil.ReadAll(ctx.Request.Body)
-	log.Debugf("Got echo request: %+v", echoData)
+	log.Debugf("Got echo request: %s", echoData)
 	ctx.String(http.StatusOK, fmt.Sprintf("%s\n", echoData))
 }
 
@@ -63,6 +65,15 @@ func (s *HTTPHandlerServer) Health(ctx *gin.Context) {
 func (s *HTTPHandlerServer) Ping(ctx *gin.Context) {
 	log.Debug("Got ping request")
 	ctx.String(http.StatusOK, "pong\n")
+}
+
+// Version ...
+func (s *HTTPHandlerServer) Version(ctx *gin.Context) {
+	log.Debug("Got version request")
+	vsn := version.VersionData()
+	ctx.String(http.StatusOK, fmt.Sprintf(
+		"Version: %s\nBuild Date: %s\nGit Commit: %s\nGitBranch: %s\nGitSummary: %s\n",
+		vsn.Semantic, vsn.BuildDate, vsn.GitCommit, vsn.GitBranch, vsn.GitSummary))
 }
 
 // Serve ...
