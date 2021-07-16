@@ -12,7 +12,7 @@ logging:
   colored: true
   level: trace
   output: stdout
-  report-caller: true
+  report-caller: false
 client-logging:
   colored: true
   level: error

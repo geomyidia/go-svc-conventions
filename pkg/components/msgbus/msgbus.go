@@ -4,6 +4,7 @@ import (
 	"sync"
 
 	"github.com/asaskevich/EventBus"
+	log "github.com/sirupsen/logrus"
 )
 
 const (
@@ -64,11 +65,10 @@ func (m *MsgBus) Topics() []string {
 
 func (m *MsgBus) Publish(event *Event) {
 	topic := event.Name
-	if topic == WildCardTopic {
-		for _, t := range m.Topics() {
-			m.bus.Publish(t, event)
-		}
-	} else {
-		m.bus.Publish(topic, event)
+	log.Debugf("Publishing to topic '%s' ...", topic)
+	m.bus.Publish(topic, event)
+	if m.bus.HasCallback(WildCardTopic) {
+		log.Debugf("Publishing to topic '%s' ...", WildCardTopic)
+		m.bus.Publish(WildCardTopic, event)
 	}
 }
