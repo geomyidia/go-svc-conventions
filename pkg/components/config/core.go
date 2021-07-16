@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	cfg "github.com/spf13/viper"
-	log "github.com/sirupsen/logrus"
 	logger "github.com/geomyidia/zylog/logger"
+	log "github.com/sirupsen/logrus"
+	cfg "github.com/spf13/viper"
 )
 
 // Configuration related constants
@@ -38,8 +38,14 @@ func init() {
 
 // HTTPDConfig ...
 type HTTPDConfig struct {
-	Host string
-	Port int
+	Host           string
+	Port           int
+	RequestLogging bool
+}
+
+// ConnectionString ...
+func (c *HTTPDConfig) ConnectionString() string {
+	return fmt.Sprintf("%s:%d", c.Host, c.Port)
 }
 
 // FileDBConfig ...
@@ -53,21 +59,26 @@ type GRPCDConfig struct {
 	Port int
 }
 
+// ConnectionString ...
+func (c *GRPCDConfig) ConnectionString() string {
+	return fmt.Sprintf("%s:%d", c.Host, c.Port)
+}
+
 // Config ...
 type Config struct {
-	HTTPD HTTPDConfig
-	DB    FileDBConfig
-	GRPCD GRPCDConfig
+	HTTPD   *HTTPDConfig
+	DB      *FileDBConfig
+	GRPCD   *GRPCDConfig
 	Logging *logger.ZyLogOptions
 }
 
-// NewConfig is a constructor that creates the full coniguration data structure 
-// for use by our application(s) and client(s) as an in-memory copy of the 
-// config data (saving from having to make repeated and somewhat expensive 
-// calls to the viper library). 
-// 
+// NewConfig is a constructor that creates the full coniguration data structure
+// for use by our application(s) and client(s) as an in-memory copy of the
+// config data (saving from having to make repeated and somewhat expensive
+// calls to the viper library).
+//
 // Note that Viper does provide both the AllSettings() and Unmarshall()
-// functions, but these require that you have a struct defined that will be 
+// functions, but these require that you have a struct defined that will be
 // used to dump the Viper config data into. We've already got that set up, so
 // there's no real benefit to switching.
 //
@@ -76,14 +87,15 @@ type Config struct {
 // in ./components/logging.go, Setup).
 func NewConfig() *Config {
 	return &Config{
-		HTTPD: HTTPDConfig{
-			Host: cfg.GetString("httpd.host"),
-			Port: cfg.GetInt("httpd.port"),
+		HTTPD: &HTTPDConfig{
+			Host:           cfg.GetString("httpd.host"),
+			Port:           cfg.GetInt("httpd.port"),
+			RequestLogging: cfg.GetBool("httpd.request-logging"),
 		},
-		DB: FileDBConfig{
+		DB: &FileDBConfig{
 			Directory: cfg.GetString("database.file-based.directory"),
 		},
-		GRPCD: GRPCDConfig{
+		GRPCD: &GRPCDConfig{
 			Host: cfg.GetString("grpc.host"),
 			Port: cfg.GetInt("grpc.port"),
 		},
@@ -94,14 +106,4 @@ func NewConfig() *Config {
 			ReportCaller: cfg.GetBool("logging.report-caller"),
 		},
 	}
-}
-
-// GRPCConnectionString ...
-func (c *Config) GRPCConnectionString() string {
-	return fmt.Sprintf("%s:%d", c.GRPCD.Host, c.GRPCD.Port)
-}
-
-// HTTPConnectionString ...
-func (c *Config) HTTPConnectionString() string {
-	return fmt.Sprintf("%s:%d", c.HTTPD.Host, c.HTTPD.Port)
 }

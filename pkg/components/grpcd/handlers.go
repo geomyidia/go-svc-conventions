@@ -2,21 +2,31 @@ package grpcd
 
 import (
 	"context"
+	"sync"
 
+	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 
+	"github.com/geomyidia/reverb"
+
 	pb "github.com/geomyidia/go-svc-conventions/api"
-	log "github.com/sirupsen/logrus"
+	"github.com/geomyidia/go-svc-conventions/pkg/components/config"
 )
 
 // GRPCHandlerServer ...
 type GRPCHandlerServer struct {
 	pb.UnimplementedServiceExampleServer
+	Addr   string
+	Server *reverb.Reverb
 }
 
 // NewGRPCHandlerServer ...
-func NewGRPCHandlerServer() *GRPCHandlerServer {
-	return &GRPCHandlerServer{}
+func NewGRPCHandlerServer(cfg *config.GRPCDConfig) *GRPCHandlerServer {
+	s := &GRPCHandlerServer{Addr: cfg.ConnectionString()}
+	r := reverb.New()
+	s.RegisterServer(r.GRPCServer)
+	s.Server = r
+	return s
 }
 
 // Echo ...
@@ -40,4 +50,36 @@ func (s *GRPCHandlerServer) Ping(ctx context.Context, in *pb.PingRequest) (*pb.P
 // RegisterServer ...
 func (s *GRPCHandlerServer) RegisterServer(grpcServer *grpc.Server) {
 	pb.RegisterServiceExampleServer(grpcServer, s)
+}
+
+// Serve
+func (s *GRPCHandlerServer) Serve() {
+	log.Infof("gRPC daemon listening on %s ...", s.Addr)
+	s.Server.Start(s.Addr).Serve()
+	log.Info("gRPC daemon is quitting ...")
+}
+
+// Shutdown ...
+func (s *GRPCHandlerServer) Shutdown() {
+	var wg sync.WaitGroup
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		if s.Server != nil {
+			s.Server.GRPCServer.GracefulStop()
+			//s.Server.GRPCServer.Stop()
+		}
+	}()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		if s.Server != nil {
+			s.Server.Close()
+		}
+	}()
+
+	wg.Wait()
+	log.Debugf("gRPC Daemon has been shutdown.")
 }

@@ -36,13 +36,16 @@ Or, to run with a different HTTP port:
 $ APP_HTTPD_PORT=5151 make run 
 ```
 
-Checking the HTTP daemon with `curl`:
+Using the default port, check the HTTP daemon with `curl`:
 
 ```shell
 $ curl http://localhost:5099/ping
-```
-```
 pong
+$ curl http://localhost:5099/health
+Services: OK
+Errors: NULL
+$ curl -XPOST http://localhost:5099/echo -d "Stuff"
+Stuff
 ```
 
 Checking the gRPC daemon with our client:
@@ -63,7 +66,7 @@ $ ./bin/client health
 2019-09-19T14:27:43-05:00 INFO [main.main:53] ▶ Errors: NULL
 ```
 ```shell
-$ ./bin/client
+$ ./bin/client ping
 ```
 ```
 2019-09-19T14:27:58-05:00 INFO [github.com/geomyidia/zylog/logger.SetupLogging:109] ▶ Logging initialized.

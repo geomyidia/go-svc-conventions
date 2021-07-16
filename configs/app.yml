@@ -1,6 +1,7 @@
 httpd:
   port: 5099
   host: localhost
+  request-logging: false
 grpc:
   port: 2525
   host: localhost
@@ -9,6 +10,6 @@ database:
     directory: ./data  
 logging:
   colored: true
-  level: debug
+  level: trace
   output: stdout
   report-caller: true
