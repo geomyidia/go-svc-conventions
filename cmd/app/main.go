@@ -28,8 +28,8 @@ func main() {
 	defer cancel()
 	var wg sync.WaitGroup
 
-	httpDaemon := httpd.SetupServer(a)
-	grpcDaemon := grpcd.SetupServer(a.Config)
+	httpDaemon := httpd.NewHTTPServer(a)
+	grpcDaemon := grpcd.NewGRPCServer(a)
 
 	// Initialise the HTTP server in its own goroutine and wire to wait group
 	wg.Add(1)
