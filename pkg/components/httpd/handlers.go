@@ -72,7 +72,7 @@ func (s *HTTPHandlerServer) Version(ctx *gin.Context) {
 	log.Debug("Got version request")
 	vsn := version.VersionData()
 	ctx.String(http.StatusOK, fmt.Sprintf(
-		"Version: %s\nBuild Date: %s\nGit Commit: %s\nGitBranch: %s\nGitSummary: %s\n",
+		"Version: %s\nBuild Date: %s\nGit Commit: %s\nGit Branch: %s\nGit Summary: %s\n",
 		vsn.Semantic, vsn.BuildDate, vsn.GitCommit, vsn.GitBranch, vsn.GitSummary))
 }
 

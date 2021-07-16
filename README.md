@@ -31,9 +31,9 @@ $ make run
 ```
 
 ```
-2021-07-16T01:15:58-05:00 INFO [github.com/geomyidia/zylog/logger.SetupLogging:109] ▶ Logging initialized.
-2021-07-16T01:15:58-05:00 DEBUG [github.com/geomyidia/go-svc-conventions/pkg/components/httpd.SetupServer:11] ▶ Setting up HTTP daemon ...
-2021-07-16T01:15:58-05:00 DEBUG [github.com/geomyidia/go-svc-conventions/pkg/components/httpd.(*HTTPHandlerServer).SetupRoutes:35] ▶ Setting up HTTPD routes ...
+2021-07-16T01:32:12-05:00 INFO ▶ Logging initialized.
+2021-07-16T01:32:12-05:00 DEBUG ▶ Setting up HTTP daemon ...
+2021-07-16T01:32:12-05:00 DEBUG ▶ Setting up HTTPD routes ...
 [GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
  - using env:	export GIN_MODE=release
  - using code:	gin.SetMode(gin.ReleaseMode)
@@ -41,11 +41,12 @@ $ make run
 [GIN-debug] POST   /echo                     --> github.com/geomyidia/go-svc-conventions/pkg/components/httpd.(*HTTPHandlerServer).Echo-fm (1 handlers)
 [GIN-debug] GET    /health                   --> github.com/geomyidia/go-svc-conventions/pkg/components/httpd.(*HTTPHandlerServer).Health-fm (1 handlers)
 [GIN-debug] GET    /ping                     --> github.com/geomyidia/go-svc-conventions/pkg/components/httpd.(*HTTPHandlerServer).Ping-fm (1 handlers)
-2021-07-16T01:15:58-05:00 DEBUG [github.com/geomyidia/go-svc-conventions/pkg/components/httpd.SetupServer:13] ▶ HTTP daemon set up.
-2021-07-16T01:15:58-05:00 DEBUG [github.com/geomyidia/go-svc-conventions/pkg/components/grpcd.SetupServer:11] ▶ Setting up gRPC daemon ...
-2021-07-16T01:15:58-05:00 DEBUG [github.com/geomyidia/go-svc-conventions/pkg/components/grpcd.SetupServer:13] ▶ gRPC implementation set up.
-2021-07-16T01:15:58-05:00 INFO [github.com/geomyidia/go-svc-conventions/pkg/components/grpcd.(*GRPCHandlerServer).Serve:72] ▶ gRPC daemon listening on localhost:2525 ...
-2021-07-16T01:15:58-05:00 INFO [github.com/geomyidia/go-svc-conventions/pkg/components/httpd.(*HTTPHandlerServer).Serve:70] ▶ HTTP daemon listening on localhost:5099 ...
+[GIN-debug] GET    /version                  --> github.com/geomyidia/go-svc-conventions/pkg/components/httpd.(*HTTPHandlerServer).Version-fm (1 handlers)
+2021-07-16T01:32:12-05:00 DEBUG ▶ HTTP daemon set up.
+2021-07-16T01:32:12-05:00 DEBUG ▶ Setting up gRPC daemon ...
+2021-07-16T01:32:12-05:00 DEBUG ▶ gRPC implementation set up.
+2021-07-16T01:32:12-05:00 INFO ▶ gRPC daemon listening on localhost:2525 ...
+2021-07-16T01:32:12-05:00 INFO ▶ HTTP daemon listening on localhost:5099 ...
 ```
 
 Or, to run with a different HTTP port:
@@ -65,14 +66,20 @@ Errors: NULL
 $ curl -XPOST http://localhost:5099/echo -d "Stuff"
 Stuff
 $ curl http://localhost:5099/version
+Version: 0.2.0
+Build Date: 2021-07-16T06:32:10Z
+Git Commit: ba7858a
+Git Branch: main
+Git Summary: 0.1.0-11-gba7858a-dirty
 ```
 
 You should see server debug notices for these requests:
 
 ```
-2021-07-16T01:18:23-05:00 INFO [github.com/geomyidia/go-svc-conventions/pkg/components/grpcd.(*GRPCHandlerServer).Serve:72] ▶ gRPC daemon listening on localhost:2525 ...
-2021-07-16T01:18:23-05:00 INFO [github.com/geomyidia/go-svc-conventions/pkg/components/httpd.(*HTTPHandlerServer).Serve:70] ▶ HTTP daemon listening on localhost:5099 ...
-2021-07-16T01:18:25-05:00 DEBUG [github.com/geomyidia/go-svc-conventions/pkg/components/httpd.(*HTTPHandlerServer).Echo:52] ▶ Got echo request: Stuff
+2021-07-16T01:32:48-05:00 DEBUG ▶ Got ping request
+2021-07-16T01:32:55-05:00 DEBUG ▶ Got health request
+2021-07-16T01:33:05-05:00 DEBUG ▶ Got echo request: Stuff
+2021-07-16T01:33:16-05:00 DEBUG ▶ Got version request
 ```
 
 Checking the gRPC daemon with our client:
