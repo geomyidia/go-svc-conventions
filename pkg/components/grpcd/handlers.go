@@ -2,12 +2,11 @@ package grpcd
 
 import (
 	"context"
+	"net"
 	"sync"
 
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
-
-	"github.com/geomyidia/reverb"
 
 	pb "github.com/geomyidia/go-svc-conventions/api"
 	"github.com/geomyidia/go-svc-conventions/pkg/components/config"
@@ -18,14 +17,14 @@ import (
 type GRPCHandlerServer struct {
 	pb.UnimplementedServiceExampleServer
 	Addr   string
-	Server *reverb.Reverb
+	Server *grpc.Server
 }
 
 // NewGRPCHandlerServer ...
 func NewGRPCHandlerServer(cfg *config.GRPCDConfig) *GRPCHandlerServer {
 	s := &GRPCHandlerServer{Addr: cfg.ConnectionString()}
-	r := reverb.New()
-	s.RegisterServer(r.GRPCServer)
+	r := grpc.NewServer()
+	s.RegisterServer(r)
 	s.Server = r
 	return s
 }
@@ -70,7 +69,13 @@ func (s *GRPCHandlerServer) Version(
 // Serve
 func (s *GRPCHandlerServer) Serve() {
 	log.Infof("gRPC daemon listening on %s ...", s.Addr)
-	s.Server.Start(s.Addr).Serve()
+
+	lis, err := net.Listen("tcp", s.Addr)
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+
+	s.Server.Serve(lis)
 	log.Info("gRPC daemon is quitting ...")
 }
 
@@ -82,8 +87,7 @@ func (s *GRPCHandlerServer) Shutdown() {
 	go func() {
 		defer wg.Done()
 		if s.Server != nil {
-			s.Server.GRPCServer.GracefulStop()
-			//s.Server.GRPCServer.Stop()
+			s.Server.GracefulStop()
 		}
 	}()
 
@@ -91,7 +95,7 @@ func (s *GRPCHandlerServer) Shutdown() {
 	go func() {
 		defer wg.Done()
 		if s.Server != nil {
-			s.Server.Close()
+			s.Server.Stop()
 		}
 	}()
 
