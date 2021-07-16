@@ -48,11 +48,14 @@ func (c *Client) ParseArgs(rawArgs []string) {
 	}
 	c.Command = cmd
 	c.Args = args
+	log.Debugf("Parsed cmd: %s", cmd)
+	log.Debugf("Parsed args: %v", args)
 }
 
 // Close the gRPC connection
 func (c *Client) Close() {
 	c.GRPCConn.Close()
+	log.Debug("Closed gRPC client connection.")
 }
 
 // RunCommand ...
@@ -61,6 +64,7 @@ func (c *Client) RunCommand() {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
+	log.Debugf("Running command: %s", c.Command)
 	switch c.Command {
 	case "echo":
 		data := fmt.Sprintf("%s", c.Args)

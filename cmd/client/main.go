@@ -12,7 +12,7 @@ func main() {
 	// Create the client object and assign components to it
 	c := grpcc.NewClient()
 	c.Config = config.NewConfig()
-	c.Logger = logging.Load(c.Config)
+	c.Logger = logging.LoadClient(c.Config)
 
 	// Perform client setup and then issue the parsed command
 	c.SetupConnection()

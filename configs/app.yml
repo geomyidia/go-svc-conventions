@@ -13,3 +13,8 @@ logging:
   level: trace
   output: stdout
   report-caller: true
+client-logging:
+  colored: true
+  level: debug
+  output: stdout
+  report-caller: true

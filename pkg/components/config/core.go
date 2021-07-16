@@ -66,10 +66,11 @@ func (c *GRPCDConfig) ConnectionString() string {
 
 // Config ...
 type Config struct {
-	HTTPD   *HTTPDConfig
-	DB      *FileDBConfig
-	GRPCD   *GRPCDConfig
-	Logging *logger.ZyLogOptions
+	HTTPD         *HTTPDConfig
+	DB            *FileDBConfig
+	GRPCD         *GRPCDConfig
+	Logging       *logger.ZyLogOptions
+	ClientLogging *logger.ZyLogOptions
 }
 
 // NewConfig is a constructor that creates the full coniguration data structure
@@ -104,6 +105,12 @@ func NewConfig() *Config {
 			Level:        cfg.GetString("logging.level"),
 			Output:       cfg.GetString("logging.output"),
 			ReportCaller: cfg.GetBool("logging.report-caller"),
+		},
+		ClientLogging: &logger.ZyLogOptions{
+			Colored:      cfg.GetBool("client-logging.colored"),
+			Level:        cfg.GetString("client-logging.level"),
+			Output:       cfg.GetString("client-logging.output"),
+			ReportCaller: cfg.GetBool("client-logging.report-caller"),
 		},
 	}
 }

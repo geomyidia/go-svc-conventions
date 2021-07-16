@@ -13,8 +13,18 @@ func Setup(cfg *config.Config) {
 	logger.SetupLogging(cfg.Logging)
 }
 
+// Setup ...
+func SetupClient(cfg *config.Config) {
+	logger.SetupLogging(cfg.ClientLogging)
+}
+
 // Load pretends that the global is more functional in nature ...
 func Load(cfg *config.Config) *log.Logger {
 	Setup(cfg)
+	return log.StandardLogger()
+}
+
+func LoadClient(cfg *config.Config) *log.Logger {
+	SetupClient(cfg)
 	return log.StandardLogger()
 }
