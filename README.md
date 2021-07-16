@@ -1,6 +1,6 @@
 # go-svc-conventions
 
-## Key Concetps
+## Key Concepts
 
 This repo demonstrates the following:
 
@@ -9,12 +9,12 @@ This repo demonstrates the following:
 
 In particular, what are shown in this code:
 
-* Encapsulate the different ways in which you want to assemble your code using "components"
-* Embed this in a struct as a "server" (the term Mat Ryer uses) or as an "application" (the term I use in this repo)
-* Provide both reuse and symmetry between server and client code
-* Put in place mechanisms that facilitate lower-effort, lower-impact future refactorings
-* Provide symmetry between HTTP and gRPC handlers (note that business logic should be done elsewhere! then called via imported functions inside your handlers)
-* Pull config into memory
+* Encapsulation of functionality you want to assemble code using "components"
+* Embedding of this in a struct as a "server" (the term Mat Ryer uses) or as an "application" (the term I use in this repo)
+* Providing both reuse and symmetry between server and client code
+* Putting in place mechanisms that facilitate lower-effort, lower-impact future refactorings
+* Providing symmetry between HTTP and gRPC handlers (note that business logic should be done elsewhere! then called via imported functions inside your handlers)
+* Pulling of config into memory
 
 Much of this has been taken from my long experiences in the world of non-Go fault-tolerant and highly available services, but is validated by long-time Go hackers with very similar and pragmatic views.
 
@@ -105,12 +105,4 @@ $ ./bin/client ping
 ```
 2019-09-19T14:27:58-05:00 INFO [github.com/geomyidia/zylog/logger.SetupLogging:109] ▶ Logging initialized.
 2019-09-19T14:27:58-05:00 INFO [main.main:59] ▶ Reply: PONG
-```
-
-## Development
-
-If you'd like to pull the deps into `vendor` dir:
-
-```shell
-$ make deps
 ```
