@@ -26,7 +26,7 @@ deps:
 	@GO111MODULE=on go mod vendor -v
 	@GO111MODULE=off go get -u github.com/golang/protobuf/protoc-gen-go
 
-build: protoc-regen bin/app bin/client
+build: clean protoc-regen bin/app bin/client
 
 bin/%: cmd/%/main.go
 	@GO111MODULE=on go build -ldflags "$(LDFLAGS)" -o $@ $<
@@ -50,9 +50,12 @@ clean-protobuf:
 	@rm -f api/*.pb.go
 
 api/%.pb.go: api/%.proto 
-	@protoc -I api --go_out=plugins=grpc:api $<
-	@cp -r api/$(FQ_PROJ)/api/* api/
-	@rm -rf api/$(DVCS_HOST)
+	@protoc \
+	--go_out=../ --go_opt=paths=source_relative \
+	--go-grpc_out=../ --go-grpc_opt=paths=source_relative \
+	--go_out=plugins=grpc:api $<
+	@mv ./api/api/*.go ./api/
+	@-rmdir ./api/api
 
 $(GOLANGCI_LINT):
 	@echo ">> Couldn't find $(GOLANGCI_LINT); installing"
