@@ -9,7 +9,9 @@ import (
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 
+	"github.com/geomyidia/go-svc-conventions/pkg/components"
 	"github.com/geomyidia/go-svc-conventions/pkg/components/config"
+	"github.com/geomyidia/go-svc-conventions/pkg/components/msgbus"
 	"github.com/geomyidia/go-svc-conventions/pkg/version"
 )
 
@@ -18,11 +20,16 @@ type HTTPHandlerServer struct {
 	Addr   string
 	Routes *gin.Engine
 	Server *http.Server
+	Bus    *msgbus.MsgBus
 }
 
-func NewHTTPHandlerServer(cfg *config.HTTPDConfig) *HTTPHandlerServer {
-	s := &HTTPHandlerServer{}
+func NewHTTPHandlerServer(a *components.Application) *HTTPHandlerServer {
+	s := &HTTPHandlerServer{
+		Bus: a.Bus,
+	}
+	cfg := a.Config.HTTPD
 	s.SetupRoutes(cfg)
+	s.SetupSubscriptions()
 	s.Addr = cfg.ConnectionString()
 	s.Server = &http.Server{
 		Addr:    s.Addr,
@@ -48,6 +55,11 @@ func (s *HTTPHandlerServer) SetupRoutes(cfg *config.HTTPDConfig) {
 	s.Routes = router
 }
 
+// SetupSubscriptions ...
+func (s *HTTPHandlerServer) SetupSubscriptions() {
+	s.Bus.Subscribe("ping", func(event *msgbus.Event) { log.Warnf("Got event: %#v", event) })
+}
+
 // Echo ...
 func (s *HTTPHandlerServer) Echo(ctx *gin.Context) {
 	echoData, _ := ioutil.ReadAll(ctx.Request.Body)
@@ -64,6 +76,7 @@ func (s *HTTPHandlerServer) Health(ctx *gin.Context) {
 // Ping ...
 func (s *HTTPHandlerServer) Ping(ctx *gin.Context) {
 	log.Debug("Got ping request")
+	s.Bus.Publish(msgbus.NewEvent("ping", "DATA"))
 	ctx.String(http.StatusOK, "pong\n")
 }
 

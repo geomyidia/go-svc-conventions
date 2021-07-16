@@ -13,25 +13,22 @@ import (
 	"github.com/geomyidia/go-svc-conventions/pkg/components/grpcd"
 	"github.com/geomyidia/go-svc-conventions/pkg/components/httpd"
 	"github.com/geomyidia/go-svc-conventions/pkg/components/logging"
+	"github.com/geomyidia/go-svc-conventions/pkg/components/msgbus"
 )
-
-// Application ...
-type Application struct {
-	components.Default
-}
 
 func main() {
 	// Create the application object and assign components to it
-	a := new(Application)
+	a := new(components.Application)
 	a.Config = config.NewConfig()
 	a.Logger = logging.Load(a.Config)
+	a.Bus = msgbus.NewMsgBus()
 
 	// Create context that listens for the interrupt signal from the OS.
 	ctx, cancel := util.SignalWithContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer cancel()
 	var wg sync.WaitGroup
 
-	httpDaemon := httpd.SetupServer(a.Config)
+	httpDaemon := httpd.SetupServer(a)
 	grpcDaemon := grpcd.SetupServer(a.Config)
 
 	// Initialise the HTTP server in its own goroutine and wire to wait group
@@ -45,6 +42,7 @@ func main() {
 	// XXX this has been dsiable since it blocks (due to gRPC server-shutdown
 	//     not using context / cancelation) Is there are way to cancel gRPC
 	//     servers with a context?
+	//     ticket: https://github.com/geomyidia/go-svc-conventions/issues/11
 	//wg.Add(1)
 	go func() {
 		//defer wg.Done()
