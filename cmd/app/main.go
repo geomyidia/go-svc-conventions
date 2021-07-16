@@ -23,6 +23,10 @@ func main() {
 	a.Logger = logging.Load(a.Config)
 	a.Bus = msgbus.NewMsgBus()
 
+	// Set up subscriptions
+	a.Bus.Subscribe("ping", func(event *msgbus.Event) { log.Warnf("Got event: %#v", event) })
+	a.Bus.Subscribe("version", func(event *msgbus.Event) { log.Warnf("Got event: %#v", event) })
+
 	// Create context that listens for the interrupt signal from the OS.
 	ctx, cancel := util.SignalWithContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer cancel()

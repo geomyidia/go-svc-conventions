@@ -6,6 +6,7 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	pb "github.com/geomyidia/go-svc-conventions/api"
+	"github.com/geomyidia/go-svc-conventions/pkg/components/msgbus"
 	"github.com/geomyidia/go-svc-conventions/pkg/version"
 )
 
@@ -28,9 +29,11 @@ func (s *GRPCServer) Ping(ctx context.Context, in *pb.PingRequest) (*pb.PingRepl
 }
 
 // Version ...
-func (s *GRPCServer) Version(
-	_ context.Context, in *pb.VersionRequest) (*pb.VersionReply, error) {
+func (s *GRPCServer) Version(_ context.Context, in *pb.VersionRequest) (*pb.VersionReply, error) {
 	log.Debugf("Received version request")
+	log.Debugf("Available topics: %+v", s.Bus.Topics())
+	event := msgbus.NewEvent("version", "DATA")
+	s.Bus.Publish(event)
 	vsn := version.VersionData()
 	return &pb.VersionReply{
 		Version:    vsn.Semantic,

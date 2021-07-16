@@ -27,7 +27,6 @@ func NewHTTPServer(app *components.Application) *HTTPServer {
 		Bus: app.Bus,
 	}
 	s.SetupRoutes(cfg)
-	s.SetupSubscriptions()
 	s.Addr = cfg.ConnectionString()
 	s.Server = &http.Server{
 		Addr:    s.Addr,
@@ -52,11 +51,6 @@ func (s *HTTPServer) SetupRoutes(cfg *config.HTTPDConfig) {
 	router.GET("/ping", s.Ping)
 	router.GET("/version", s.Version)
 	s.Routes = router
-}
-
-// SetupSubscriptions ...
-func (s *HTTPServer) SetupSubscriptions() {
-	s.Bus.Subscribe("ping", func(event *msgbus.Event) { log.Warnf("Got event: %#v", event) })
 }
 
 // Serve ...
