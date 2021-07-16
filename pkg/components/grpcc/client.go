@@ -1,15 +1,15 @@
-package client
+package grpcc
 
 import (
 	"context"
 	"fmt"
 	"time"
 
+	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 
 	pb "github.com/geomyidia/go-svc-conventions/api"
 	"github.com/geomyidia/go-svc-conventions/pkg/components"
-	log "github.com/sirupsen/logrus"
 )
 
 // Client ...
@@ -21,8 +21,14 @@ type Client struct {
 	Args       []string
 }
 
+// NewClient ...
+func NewClient() *Client {
+	return &Client{}
+}
+
 // SetupConnection ...
 func (c *Client) SetupConnection() {
+	log.Debug("Setting up client connection ...")
 	connectionOpts := c.Config.GRPCD.ConnectionString()
 	conn, err := grpc.Dial(connectionOpts, grpc.WithInsecure())
 	if err != nil {
@@ -70,6 +76,16 @@ func (c *Client) RunCommand() {
 		}
 		log.Printf("Services: %s", r.GetServices())
 		log.Printf("Errors: %s", r.GetErrors())
+	case "version":
+		r, err := c.GRPCClient.Version(ctx, &pb.VersionRequest{})
+		if err != nil {
+			log.Fatalf("could not get version reply: %v", err)
+		}
+		log.Printf("Version: %s", r.GetVersion())
+		log.Printf("BuildDate: %s", r.GetBuildDate())
+		log.Printf("GitCommit: %s", r.GetGitCommit())
+		log.Printf("GitBranch: %s", r.GetGitBranch())
+		log.Printf("GitSummary: %s", r.GetGitSummary())
 	default:
 		r, err := c.GRPCClient.Ping(ctx, &pb.PingRequest{})
 		if err != nil {
