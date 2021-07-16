@@ -42,6 +42,9 @@ func main() {
 	}()
 
 	// Initialise the gRPC server in its own goroutine and wire to wait group
+	// XXX this has been dsiable since it blocks (due to gRPC server-shutdown
+	//     not using context / cancelation) Is there are way to cancel gRPC
+	//     servers with a context?
 	//wg.Add(1)
 	go func() {
 		//defer wg.Done()
