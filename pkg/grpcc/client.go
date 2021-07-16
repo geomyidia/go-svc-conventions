@@ -72,29 +72,29 @@ func (c *Client) RunCommand() {
 		if err != nil {
 			log.Fatalf("could not get echo reply: %v", err)
 		}
-		log.Printf("Echo: %s", r.GetData())
+		fmt.Printf("Echo: %s\n", r.GetData())
 	case "health":
 		r, err := c.GRPCClient.Health(ctx, &pb.HealthRequest{})
 		if err != nil {
 			log.Fatalf("could not get health reply: %v", err)
 		}
-		log.Printf("Services: %s", r.GetServices())
-		log.Printf("Errors: %s", r.GetErrors())
+		fmt.Printf("Services: %s\n", r.GetServices())
+		fmt.Printf("Errors: %s\n", r.GetErrors())
 	case "version":
 		r, err := c.GRPCClient.Version(ctx, &pb.VersionRequest{})
 		if err != nil {
 			log.Fatalf("could not get version reply: %v", err)
 		}
-		log.Printf("Version: %s", r.GetVersion())
-		log.Printf("BuildDate: %s", r.GetBuildDate())
-		log.Printf("GitCommit: %s", r.GetGitCommit())
-		log.Printf("GitBranch: %s", r.GetGitBranch())
-		log.Printf("GitSummary: %s", r.GetGitSummary())
+		fmt.Printf("Version: %s\n", r.GetVersion())
+		fmt.Printf("BuildDate: %s\n", r.GetBuildDate())
+		fmt.Printf("GitCommit: %s\n", r.GetGitCommit())
+		fmt.Printf("GitBranch: %s\n", r.GetGitBranch())
+		fmt.Printf("GitSummary: %s\n", r.GetGitSummary())
 	default:
 		r, err := c.GRPCClient.Ping(ctx, &pb.PingRequest{})
 		if err != nil {
 			log.Fatalf("could not get ping reply: %v", err)
 		}
-		log.Printf("Reply: %s", r.GetData())
+		fmt.Printf("%s\n", r.GetData())
 	}
 }

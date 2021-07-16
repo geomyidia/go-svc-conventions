@@ -15,6 +15,6 @@ logging:
   report-caller: true
 client-logging:
   colored: true
-  level: debug
+  level: error
   output: stdout
   report-caller: true

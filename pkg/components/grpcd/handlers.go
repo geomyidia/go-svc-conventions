@@ -36,26 +36,26 @@ func (s *GRPCHandlerServer) RegisterServer(grpcServer *grpc.Server) {
 
 // Echo ...
 func (s *GRPCHandlerServer) Echo(ctx context.Context, in *pb.GenericData) (*pb.GenericData, error) {
-	log.Debugf("Received: %v", in)
+	log.Debugf("Received echo %v", in)
 	return &pb.GenericData{Data: in.GetData()}, nil
 }
 
 // Health ...
 func (s *GRPCHandlerServer) Health(ctx context.Context, in *pb.HealthRequest) (*pb.HealthReply, error) {
-	log.Debugf("Received: %v", in)
+	log.Debugf("Received health request")
 	return &pb.HealthReply{Services: "OK", Errors: "NULL"}, nil
 }
 
 // Ping ...
 func (s *GRPCHandlerServer) Ping(ctx context.Context, in *pb.PingRequest) (*pb.PingReply, error) {
-	log.Debugf("Received: %v", in)
+	log.Debug("Received ping")
 	return &pb.PingReply{Data: "PONG"}, nil
 }
 
 // Version ...
 func (s *GRPCHandlerServer) Version(
 	_ context.Context, in *pb.VersionRequest) (*pb.VersionReply, error) {
-	log.Debugf("Received: %v", in)
+	log.Debugf("Received version request")
 	vsn := version.VersionData()
 	return &pb.VersionReply{
 		Version:    vsn.Semantic,

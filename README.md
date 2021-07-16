@@ -94,24 +94,17 @@ You should see server debug notices for these requests:
 Checking the gRPC daemon with our client:
 
 ```shell
-$ ./bin/client echo hej, check this stuff out
-```
-```
-2019-09-19T14:27:27-05:00 INFO [github.com/geomyidia/zylog/logger.SetupLogging:109] ▶ Logging initialized.
-2019-09-19T14:27:27-05:00 INFO [main.main:46] ▶ Echo: [hej, check this stuff out]
-```
-```shell
-$ ./bin/client health
-```
-```
-2019-09-19T14:27:43-05:00 INFO [github.com/geomyidia/zylog/logger.SetupLogging:109] ▶ Logging initialized.
-2019-09-19T14:27:43-05:00 INFO [main.main:52] ▶ Services: OK
-2019-09-19T14:27:43-05:00 INFO [main.main:53] ▶ Errors: NULL
-```
-```shell
 $ ./bin/client ping
-```
-```
-2019-09-19T14:27:58-05:00 INFO [github.com/geomyidia/zylog/logger.SetupLogging:109] ▶ Logging initialized.
-2019-09-19T14:27:58-05:00 INFO [main.main:59] ▶ Reply: PONG
+PONG
+$ ./bin/client health
+Services: OK
+Errors: NULL
+$ ./bin/client echo hej, check this stuff out
+Echo: [hej, check this stuff out]
+$ ./bin/client version
+Version: 0.2.0
+BuildDate: 2021-07-16T21:21:08Z
+GitCommit: 13f46fd
+GitBranch: main
+GitSummary: 0.1.0-21-g13f46fd-dirty
 ```
