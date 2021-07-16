@@ -23,6 +23,15 @@ Here are some links of interest:
 * [https://medium.com/statuscode/how-i-write-go-http-services-after-seven-years-37c208122831](https://medium.com/statuscode/how-i-write-go-http-services-after-seven-years-37c208122831)
 * [https://www.youtube.com/watch?v=rWBSMsLG8po](https://www.youtube.com/watch?v=rWBSMsLG8po)
 
+## The `components` Subpackage
+
+This is obviosuly not a standard practice in Go. To be clear, I am not advocating for such a convention. Rather, the use of the `components` subpackage is meant to underscore the packages that:
+
+1. are central to the app, while also
+1. being code that either needs to talk to other components or vice versa
+
+To the last point, (and regardless of what they are actually called or where they live) most "components" should offer an API and a state struct (e.g., connection info) that may be utilised by other "components" in the system.
+
 ## Build and Run
 
 ```shell
