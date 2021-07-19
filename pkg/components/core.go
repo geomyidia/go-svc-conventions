@@ -4,6 +4,9 @@ import (
 	logger "github.com/sirupsen/logrus"
 
 	"github.com/geomyidia/go-svc-conventions/pkg/components/config"
+	"github.com/geomyidia/go-svc-conventions/pkg/components/db"
+	"github.com/geomyidia/go-svc-conventions/pkg/components/grpcd"
+	"github.com/geomyidia/go-svc-conventions/pkg/components/httpd"
 	"github.com/geomyidia/go-svc-conventions/pkg/components/msgbus"
 )
 
@@ -29,5 +32,8 @@ type Default struct {
 // Application ...
 type Application struct {
 	Default
-	Bus *msgbus.MsgBus
+	Bus   *msgbus.MsgBus
+	DB    *db.DB
+	HTTPD *httpd.HTTPD
+	GRPCD *grpcd.GRPCD
 }

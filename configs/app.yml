@@ -18,3 +18,5 @@ client-logging:
   level: error
   output: stdout
   report-caller: true
+db:
+  directory: "./data/badger"

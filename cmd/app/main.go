@@ -10,6 +10,7 @@ import (
 	"github.com/geomyidia/go-svc-conventions/internal/util"
 	"github.com/geomyidia/go-svc-conventions/pkg/components"
 	"github.com/geomyidia/go-svc-conventions/pkg/components/config"
+	"github.com/geomyidia/go-svc-conventions/pkg/components/db"
 	"github.com/geomyidia/go-svc-conventions/pkg/components/grpcd"
 	"github.com/geomyidia/go-svc-conventions/pkg/components/httpd"
 	"github.com/geomyidia/go-svc-conventions/pkg/components/logging"
@@ -22,6 +23,9 @@ func main() {
 	a.Config = config.NewConfig()
 	a.Logger = logging.Load(a.Config)
 	a.Bus = msgbus.NewMsgBus()
+	a.DB = db.NewDB(a)
+	a.HTTPD = httpd.NewHTTPServer(a)
+	a.GRPCD = grpcd.NewGRPCServer(a)
 
 	// Set up subscriptions
 	a.Bus.Subscribe("ping", func(event *msgbus.Event) { log.Warnf("Got event: %#v", event) })
@@ -33,14 +37,18 @@ func main() {
 	defer cancel()
 	var wg sync.WaitGroup
 
-	httpDaemon := httpd.NewHTTPServer(a)
-	grpcDaemon := grpcd.NewGRPCServer(a)
+	// Initialise the HTTP server in its own goroutine and wire to wait group
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		a.DB.Connect()
+	}()
 
 	// Initialise the HTTP server in its own goroutine and wire to wait group
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		httpDaemon.Serve()
+		a.HTTPD.Serve()
 	}()
 
 	// Initialise the gRPC server in its own goroutine and wire to wait group
@@ -51,7 +59,7 @@ func main() {
 	//wg.Add(1)
 	go func() {
 		//defer wg.Done()
-		grpcDaemon.Serve()
+		a.GRPCD.Serve()
 	}()
 
 	// Listen for the interrupt signal.
@@ -65,8 +73,10 @@ func main() {
 	ctx, cancel = context.WithCancel(context.Background())
 	defer cancel()
 
-	httpDaemon.Shutdown(ctx)
-	grpcDaemon.Shutdown()
+	// Shutdown running components
+	a.HTTPD.Shutdown(ctx)
+	a.GRPCD.Shutdown()
+	a.DB.Shutdown()
 
 	log.Info("Waiting for wait groups to finish ...")
 	wg.Wait()

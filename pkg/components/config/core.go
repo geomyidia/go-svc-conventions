@@ -36,6 +36,11 @@ func init() {
 	}
 }
 
+// DBConfig ...
+type DBConfig struct {
+	Directory string
+}
+
 // HTTPDConfig ...
 type HTTPDConfig struct {
 	Host           string
@@ -46,11 +51,6 @@ type HTTPDConfig struct {
 // ConnectionString ...
 func (c *HTTPDConfig) ConnectionString() string {
 	return fmt.Sprintf("%s:%d", c.Host, c.Port)
-}
-
-// FileDBConfig ...
-type FileDBConfig struct {
-	Directory string
 }
 
 // GRPCDConfig ...
@@ -67,7 +67,7 @@ func (c *GRPCDConfig) ConnectionString() string {
 // Config ...
 type Config struct {
 	HTTPD         *HTTPDConfig
-	DB            *FileDBConfig
+	DB            *DBConfig
 	GRPCD         *GRPCDConfig
 	Logging       *logger.ZyLogOptions
 	ClientLogging *logger.ZyLogOptions
@@ -93,8 +93,8 @@ func NewConfig() *Config {
 			Port:           cfg.GetInt("httpd.port"),
 			RequestLogging: cfg.GetBool("httpd.request-logging"),
 		},
-		DB: &FileDBConfig{
-			Directory: cfg.GetString("database.file-based.directory"),
+		DB: &DBConfig{
+			Directory: cfg.GetString("db.directory"),
 		},
 		GRPCD: &GRPCDConfig{
 			Host: cfg.GetString("grpc.host"),
