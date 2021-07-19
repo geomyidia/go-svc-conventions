@@ -8,7 +8,8 @@ import (
 	"google.golang.org/grpc"
 
 	pb "github.com/geomyidia/go-svc-conventions/api"
-	"github.com/geomyidia/go-svc-conventions/pkg/components"
+	"github.com/geomyidia/go-svc-conventions/pkg/components/config"
+	"github.com/geomyidia/go-svc-conventions/pkg/components/db"
 	"github.com/geomyidia/go-svc-conventions/pkg/components/msgbus"
 )
 
@@ -18,15 +19,16 @@ type GRPCServer struct {
 	Addr   string
 	Server *grpc.Server
 	Bus    *msgbus.MsgBus
+	DB     *db.DB
 }
 
 // NewGRPCServer ...
-func NewGRPCServer(app *components.Application) *GRPCServer {
+func NewGRPCServer(cfg *config.Config, bus *msgbus.MsgBus, db *db.DB) *GRPCServer {
 	log.Debug("Setting up gRPC daemon ...")
-	cfg := app.Config.GRPCD
 	s := &GRPCServer{
-		Addr: cfg.ConnectionString(),
-		Bus:  app.Bus,
+		Addr: cfg.GRPCD.ConnectionString(),
+		Bus:  bus,
+		DB:   db,
 	}
 	gs := grpc.NewServer()
 	s.RegisterServer(gs)

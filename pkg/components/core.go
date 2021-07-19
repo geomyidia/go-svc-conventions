@@ -34,6 +34,6 @@ type Application struct {
 	Default
 	Bus   *msgbus.MsgBus
 	DB    *db.DB
-	HTTPD *httpd.HTTPD
-	GRPCD *grpcd.GRPCD
+	HTTPD *httpd.HTTPServer
+	GRPCD *grpcd.GRPCServer
 }

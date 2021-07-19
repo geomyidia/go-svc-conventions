@@ -23,9 +23,9 @@ func main() {
 	a.Config = config.NewConfig()
 	a.Logger = logging.Load(a.Config)
 	a.Bus = msgbus.NewMsgBus()
-	a.DB = db.NewDB(a)
-	a.HTTPD = httpd.NewHTTPServer(a)
-	a.GRPCD = grpcd.NewGRPCServer(a)
+	a.DB = db.NewDB(a.Config, a.Bus)
+	a.HTTPD = httpd.NewHTTPServer(a.Config, a.Bus, a.DB)
+	a.GRPCD = grpcd.NewGRPCServer(a.Config, a.Bus, a.DB)
 
 	// Set up subscriptions
 	a.Bus.Subscribe("ping", func(event *msgbus.Event) { log.Warnf("Got event: %#v", event) })

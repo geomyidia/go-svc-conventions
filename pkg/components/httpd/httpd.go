@@ -7,8 +7,8 @@ import (
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 
-	"github.com/geomyidia/go-svc-conventions/pkg/components"
 	"github.com/geomyidia/go-svc-conventions/pkg/components/config"
+	"github.com/geomyidia/go-svc-conventions/pkg/components/db"
 	"github.com/geomyidia/go-svc-conventions/pkg/components/msgbus"
 )
 
@@ -18,16 +18,17 @@ type HTTPServer struct {
 	Routes *gin.Engine
 	Server *http.Server
 	Bus    *msgbus.MsgBus
+	DB     *db.DB
 }
 
-func NewHTTPServer(app *components.Application) *HTTPServer {
+func NewHTTPServer(cfg *config.Config, bus *msgbus.MsgBus, db *db.DB) *HTTPServer {
 	log.Debug("Setting up HTTP daemon ...")
-	cfg := app.Config.HTTPD
 	s := &HTTPServer{
-		Bus: app.Bus,
+		Bus: bus,
+		DB:  db,
 	}
-	s.SetupRoutes(cfg)
-	s.Addr = cfg.ConnectionString()
+	s.SetupRoutes(cfg.HTTPD)
+	s.Addr = cfg.HTTPD.ConnectionString()
 	s.Server = &http.Server{
 		Addr:    s.Addr,
 		Handler: s.Routes,
