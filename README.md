@@ -85,20 +85,22 @@ Errors: NULL
 $ curl -XPOST http://localhost:5099/echo -d "Stuff"
 Stuff
 $ curl http://localhost:5099/version
-Version: 0.2.0
-Build Date: 2021-07-16T06:32:10Z
-Git Commit: ba7858a
-Git Branch: main
-Git Summary: 0.1.0-11-gba7858a-dirty
+Version: 0.3.0-dev
+Build Date: 2021-07-23T19:19:33Z
+Git Commit: 1e9402b
+Git Branch: release/0.3.x
+Git Summary: 0.2.0-5-g1e9402b-dirty
 ```
 
 You should see server debug notices for these requests:
 
 ```
-2021-07-16T01:32:48-05:00 DEBUG ▶ Got ping request
-2021-07-16T01:32:55-05:00 DEBUG ▶ Got health request
-2021-07-16T01:33:05-05:00 DEBUG ▶ Got echo request: Stuff
-2021-07-16T01:33:16-05:00 DEBUG ▶ Got version request
+2021-07-23T14:19:40-05:00 DEBUG ▶ Received HTTP ping request
+2021-07-23T14:19:40-05:00 DEBUG ▶ Publishing to topic '*' ...
+2021-07-23T14:19:40-05:00 WARNING ▶ Auditor got event: &{ID:e441545a-2888-46de-975b-b518577c99e2 Name:ping Data:DATA}
+2021-07-23T14:19:44-05:00 DEBUG ▶ Received HTTP health request
+2021-07-23T14:19:47-05:00 DEBUG ▶ Received HTTP echo request: Stuff
+2021-07-23T14:19:49-05:00 DEBUG ▶ Received HTTP version request
 ```
 
 Checking the gRPC daemon with our client:
@@ -112,9 +114,22 @@ Errors: NULL
 $ ./bin/client echo hej, check this stuff out
 Echo: [hej, check this stuff out]
 $ ./bin/client version
-Version: 0.2.0
-BuildDate: 2021-07-16T21:21:08Z
-GitCommit: 13f46fd
-GitBranch: main
-GitSummary: 0.1.0-21-g13f46fd-dirty
+Version: 0.3.0-dev
+BuildDate: 2021-07-23T19:19:33Z
+GitCommit: 1e9402b
+GitBranch: release/0.3.x
+GitSummary: 0.2.0-5-g1e9402b-dirty
+```
+
+And resulting output:
+
+```
+2021-07-23T14:20:22-05:00 DEBUG ▶ Received gRPC ping request
+2021-07-23T14:20:22-05:00 DEBUG ▶ Publishing to topic '*' ...
+2021-07-23T14:20:22-05:00 WARNING ▶ Auditor got event: &{ID:0f89bfeb-0788-4fac-bce6-8ff9fb0cdd80 Name:ping Data:DATA}
+2021-07-23T14:20:29-05:00 DEBUG ▶ Received gRPC health request
+2021-07-23T14:20:36-05:00 DEBUG ▶ Received gRPC echo request: data:"[hej, check this stuff out]"
+2021-07-23T14:20:43-05:00 DEBUG ▶ Received gRPC version request
+2021-07-23T14:20:43-05:00 DEBUG ▶ Publishing to topic '*' ...
+2021-07-23T14:20:43-05:00 WARNING ▶ Auditor got event: &{ID:c037eda9-696d-45c0-8507-fd570becc9ee Name:version Data:DATA}
 ```

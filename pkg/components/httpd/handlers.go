@@ -15,20 +15,20 @@ import (
 // Echo ...
 func (s *HTTPServer) Echo(ctx *gin.Context) {
 	echoData, _ := ioutil.ReadAll(ctx.Request.Body)
-	log.Debugf("Got echo request: %s", echoData)
+	log.Debugf("Received HTTP echo request: %s", echoData)
 	ctx.String(http.StatusOK, fmt.Sprintf("%s\n", echoData))
 }
 
 // Health ...
 func (s *HTTPServer) Health(ctx *gin.Context) {
-	log.Debug("Got health request")
+	log.Debug("Received HTTP health request")
 	ctx.String(http.StatusOK, fmt.Sprintf("Services: OK\nErrors: NULL\n"))
 }
 
 // Ping ...
 func (s *HTTPServer) Ping(ctx *gin.Context) {
-	log.Debug("Got ping request")
-	log.Debugf("Available topics: %+v", s.Bus.Topics())
+	log.Debug("Received HTTP ping request")
+	log.Tracef("Available topics: %+v", s.Bus.Topics())
 	event := msgbus.NewEvent("ping", "DATA")
 	s.Bus.Publish(event)
 	ctx.String(http.StatusOK, "pong\n")
@@ -36,7 +36,7 @@ func (s *HTTPServer) Ping(ctx *gin.Context) {
 
 // Version ...
 func (s *HTTPServer) Version(ctx *gin.Context) {
-	log.Debug("Got version request")
+	log.Debug("Received HTTP version request")
 	vsn := version.VersionData()
 	ctx.String(http.StatusOK, fmt.Sprintf(
 		"Version: %s\nBuild Date: %s\nGit Commit: %s\nGit Branch: %s\nGit Summary: %s\n",
