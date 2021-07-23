@@ -19,17 +19,17 @@ import (
 
 func main() {
 	// Create the application object and assign components to it
-	a := new(components.Application)
-	a.Config = config.NewConfig()
-	a.Logger = logging.Load(a.Config)
-	a.Bus = msgbus.NewMsgBus()
-	a.DB = db.NewDB(a.Config, a.Bus)
-	a.HTTPD = httpd.NewHTTPServer(a.Config, a.Bus, a.DB)
-	a.GRPCD = grpcd.NewGRPCServer(a.Config, a.Bus, a.DB)
+	app := new(components.Application)
+	app.Config = config.NewConfig()
+	app.Logger = logging.Load(app.Config)
+	app.Bus = msgbus.NewMsgBus()
+	app.DB = db.NewDB(app.Config, app.Bus)
+	app.HTTPD = httpd.NewHTTPServer(app.Config, app.Bus, app.DB)
+	app.GRPCD = grpcd.NewGRPCServer(app.Config, app.Bus, app.DB)
 
 	// Set up subscriptions
-	//a.Bus.Subscribe("ping", func(event *msgbus.Event) { log.Warnf("Got event: %#v", event) })
-	//a.Bus.Subscribe("version", func(event *msgbus.Event) { log.Warnf("Got event: %#v", event) })
+	//app.Bus.Subscribe("ping", func(event *msgbus.Event) { log.Warnf("Got event: %#v", event) })
+	//app.Bus.Subscribe("version", func(event *msgbus.Event) { log.Warnf("Got event: %#v", event) })
 
 	// Create context that listens for the interrupt signal from the OS.
 	ctx, cancel := util.SignalWithContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
@@ -40,21 +40,21 @@ func main() {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		msgbus.SetupAuditor(ctx, a.Bus)
+		msgbus.SetupAuditor(ctx, app.Bus)
 	}()
 
 	// Initialise the database connection in its own goroutine and wire to wait group
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		a.DB.Connect()
+		app.DB.Connect()
 	}()
 
 	// Initialise the HTTP server in its own goroutine and wire to wait group
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		a.HTTPD.Serve()
+		app.HTTPD.Serve()
 	}()
 
 	// Initialise the gRPC server in its own goroutine and wire to wait group
@@ -65,7 +65,7 @@ func main() {
 	//wg.Add(1)
 	go func() {
 		//defer wg.Done()
-		a.GRPCD.Serve()
+		app.GRPCD.Serve()
 	}()
 
 	// Listen for the interrupt signal.
@@ -80,9 +80,9 @@ func main() {
 	defer cancel()
 
 	// Shutdown running components
-	a.HTTPD.Shutdown(ctx)
-	a.GRPCD.Shutdown()
-	a.DB.Shutdown()
+	app.HTTPD.Shutdown(ctx)
+	app.GRPCD.Shutdown()
+	app.DB.Shutdown()
 
 	log.Info("Waiting for wait groups to finish ...")
 	wg.Wait()
