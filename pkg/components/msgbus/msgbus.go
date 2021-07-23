@@ -5,9 +5,12 @@ import (
 	"context"
 	"encoding/gob"
 	"sync"
+	"time"
 
 	"github.com/ThreeDotsLabs/watermill"
 	"github.com/ThreeDotsLabs/watermill/message"
+	"github.com/ThreeDotsLabs/watermill/message/router/middleware"
+	"github.com/ThreeDotsLabs/watermill/message/router/plugin"
 	"github.com/ThreeDotsLabs/watermill/pubsub/gochannel"
 	log "github.com/sirupsen/logrus"
 )
@@ -23,6 +26,7 @@ type Topics struct {
 }
 type MsgBus struct {
 	bus    *gochannel.GoChannel
+	router *message.Router
 	topics *Topics
 }
 
@@ -32,43 +36,59 @@ type MsgBus struct {
 //                event data is what get's published on the EventBus under that
 //                topic
 type Event struct {
+	ID   string
 	Name string
 	Data string // XXX interface{}? serialized data?
 }
 
+type ProcessedEvent struct {
+	ProcessedID string
+	Time        time.Time
+}
+
+type Handler struct {
+	handlerID string
+	topic     string
+	callback  func()
+}
+
 func Encode(e *Event) []byte {
-	log.Debugf("Attempting to encode %+v ...", e)
+	log.Tracef("Attempting to encode %+v ...", e)
 	var buf bytes.Buffer
 	enc := gob.NewEncoder(&buf)
 	err := enc.Encode(e)
 	if err != nil {
 		log.Errorf("Possble issue encoding 'event', err: %#v", err)
 	}
-	log.Debug("Encoded result: ", buf.String())
+	log.Trace("Encoded result: ", buf.String())
 	return buf.Bytes()
 }
 
 func Decode(data []byte) *Event {
-	log.Debugf("Attempting to decode bytes: %+v ...", data)
-	buf := bytes.NewBuffer(data)
+	log.Tracef("Attempting to decode bytes: %+v ...", data)
 	decoded := &Event{}
-	dec := gob.NewDecoder(buf)
+	dec := gob.NewDecoder(bytes.NewBuffer(data))
 	err := dec.Decode(decoded)
 	if err != nil {
 		log.Error("Couldn't decode event: ", err)
 	}
-	log.Debugf("Decoded result: %+v", decoded)
+	log.Tracef("Decoded event: %+v", decoded)
 	return decoded
 }
 
 func NewMsgBus() *MsgBus {
 	gob.Register(Event{})
-	bus := gochannel.NewGoChannel(
-		gochannel.Config{},
-		watermill.NewStdLogger(false, false),
-	)
+	logger := watermill.NewStdLogger(true, false)
+	bus := gochannel.NewGoChannel(gochannel.Config{}, logger)
+	router, err := message.NewRouter(message.RouterConfig{}, logger)
+	router.AddPlugin(plugin.SignalsHandler)
+	router.AddMiddleware(middleware.Recoverer)
+	if err != nil {
+		log.Panic(err)
+	}
 	return &MsgBus{
-		bus: bus,
+		bus:    bus,
+		router: router,
 		topics: &Topics{
 			topicTracker: make(map[string]bool),
 		},
@@ -88,7 +108,7 @@ func (m *MsgBus) Subscribe(ctx context.Context, eventName string) <-chan *messag
 	m.topics.Unlock()
 	messages, err := m.bus.Subscribe(ctx, eventName)
 	if err != nil {
-		log.Error("Couldn't subscribe to %s: %+v", eventName, err)
+		log.Errorf("Couldn't subscribe to %s: %+v", eventName, err)
 	}
 	return messages
 }
@@ -109,7 +129,8 @@ func (m *MsgBus) HasTopic(topic string) bool {
 
 func (m *MsgBus) Publish(event *Event) {
 	topic := event.Name
-	msg := message.NewMessage(watermill.NewUUID(), Encode(event))
+	event.ID = watermill.NewUUID()
+	msg := message.NewMessage(event.ID, Encode(event))
 	if m.HasTopic(topic) {
 		log.Debugf("Publishing to topic '%s' ...", topic)
 		m.bus.Publish(topic, msg)
