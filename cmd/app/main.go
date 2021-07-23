@@ -30,17 +30,22 @@ func main() {
 	// Set up subscriptions
 	//app.Bus.Subscribe("ping", func(event *msgbus.Event) { log.Warnf("Got event: %#v", event) })
 	//app.Bus.Subscribe("version", func(event *msgbus.Event) { log.Warnf("Got event: %#v", event) })
+	var handlers []msgbus.Handler
+	handlers = append(handlers,
+		msgbus.AddHandler("*", msgbus.HandleWildCard),
+	)
+	app.Bus.AddHandlers(handlers)
 
 	// Create context that listens for the interrupt signal from the OS.
 	ctx, cancel := util.SignalWithContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer cancel()
 	var wg sync.WaitGroup
 
-	// Initialise the event auditor in its own goroutine and wire to wait group
+	// Initialise the message bus/event auditor in its own goroutine and wire to wait group
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		msgbus.SetupAuditor(ctx, app.Bus)
+		app.Bus.Serve(ctx)
 	}()
 
 	// Initialise the database connection in its own goroutine and wire to wait group

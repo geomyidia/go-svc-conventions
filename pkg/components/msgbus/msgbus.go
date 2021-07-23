@@ -31,7 +31,15 @@ type MsgBus struct {
 type Handler struct {
 	handlerID string
 	topic     string
-	callback  func()
+	callback  func(*message.Message) error
+}
+
+func AddHandler(topic string, callback func(*message.Message) error) Handler {
+	return Handler{
+		handlerID: watermill.NewUUID(),
+		topic:     topic,
+		callback:  callback,
+	}
 }
 
 func NewMsgBus() *MsgBus {
@@ -40,7 +48,10 @@ func NewMsgBus() *MsgBus {
 	bus := gochannel.NewGoChannel(gochannel.Config{}, logger)
 	router, err := message.NewRouter(message.RouterConfig{}, logger)
 	router.AddPlugin(plugin.SignalsHandler)
-	router.AddMiddleware(middleware.Recoverer)
+	router.AddMiddleware(
+		middleware.Recoverer,
+		middleware.CorrelationID,
+	)
 	if err != nil {
 		log.Panic(err)
 	}
@@ -53,10 +64,20 @@ func NewMsgBus() *MsgBus {
 	}
 }
 
+func (m *MsgBus) AddHandlers(handlers []Handler) {
+	for _, h := range handlers {
+		m.AddTopic(h.topic)
+		m.router.AddNoPublisherHandler(
+			h.handlerID,
+			h.topic,
+			m.bus,
+			h.callback,
+		)
+	}
+}
+
 func (m *MsgBus) Subscribe(ctx context.Context, eventName string) <-chan *message.Message {
-	m.topics.Lock()
-	m.topics.topicTracker[eventName] = true
-	m.topics.Unlock()
+	m.AddTopic(eventName)
 	messages, err := m.bus.Subscribe(ctx, eventName)
 	if err != nil {
 		log.Errorf("Couldn't subscribe to %s: %+v", eventName, err)
@@ -72,6 +93,12 @@ func (m *MsgBus) Topics() []string {
 	}
 	m.topics.RUnlock()
 	return topics
+}
+
+func (m *MsgBus) AddTopic(topic string) {
+	m.topics.Lock()
+	m.topics.topicTracker[topic] = true
+	m.topics.Unlock()
 }
 
 func (m *MsgBus) HasTopic(topic string) bool {
@@ -92,12 +119,9 @@ func (m *MsgBus) Publish(event *Event) {
 	}
 }
 
-func (m *MsgBus) Process(messages <-chan *message.Message) {
-	for msg := range messages {
-		log.Debugf("Received message: %s, payload: %s", msg.UUID, string(msg.Payload))
-
-		// we need to Acknowledge that we received and processed the message,
-		// otherwise, it will be resent over and over again.
-		msg.Ack()
+func (m *MsgBus) Serve(ctx context.Context) {
+	log.Infof("Message bus waiting for events ...")
+	if err := m.router.Run(ctx); err != nil {
+		log.Panic(err)
 	}
 }
