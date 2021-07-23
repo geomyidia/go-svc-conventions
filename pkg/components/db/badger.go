@@ -29,7 +29,7 @@ func (db *DB) Connect() {
 		log.Fatal(err)
 	}
 	db.Conn = conn
-	log.Debugf("Connected to database: %s", db.Config.Directory)
+	log.Infof("Connected to database: %s", db.Config.Directory)
 }
 
 // Shutdown ...

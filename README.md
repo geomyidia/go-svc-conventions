@@ -40,22 +40,32 @@ $ make run
 ```
 
 ```
-2021-07-16T01:32:12-05:00 INFO ▶ Logging initialized.
-2021-07-16T01:32:12-05:00 DEBUG ▶ Setting up HTTP daemon ...
-2021-07-16T01:32:12-05:00 DEBUG ▶ Setting up HTTPD routes ...
+2021-07-23T14:04:27-05:00 INFO ▶ Logging initialized.
+[watermill] 2021/07/23 14:04:27.291402 router.go:183: 	level=DEBUG msg="Adding plugins" count=1
+[watermill] 2021/07/23 14:04:27.291430 router.go:151: 	level=DEBUG msg="Adding middleware" count=1
+2021-07-23T14:04:27-05:00 DEBUG ▶ Setting up database connection ...
+2021-07-23T14:04:27-05:00 DEBUG ▶ Setting up HTTP daemon ...
+2021-07-23T14:04:27-05:00 DEBUG ▶ Setting up HTTPD routes ...
 [GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
  - using env:	export GIN_MODE=release
  - using code:	gin.SetMode(gin.ReleaseMode)
 
-[GIN-debug] POST   /echo                     --> github.com/geomyidia/go-svc-conventions/pkg/components/httpd.(*HTTPHandlerServer).Echo-fm (1 handlers)
-[GIN-debug] GET    /health                   --> github.com/geomyidia/go-svc-conventions/pkg/components/httpd.(*HTTPHandlerServer).Health-fm (1 handlers)
-[GIN-debug] GET    /ping                     --> github.com/geomyidia/go-svc-conventions/pkg/components/httpd.(*HTTPHandlerServer).Ping-fm (1 handlers)
-[GIN-debug] GET    /version                  --> github.com/geomyidia/go-svc-conventions/pkg/components/httpd.(*HTTPHandlerServer).Version-fm (1 handlers)
-2021-07-16T01:32:12-05:00 DEBUG ▶ HTTP daemon set up.
-2021-07-16T01:32:12-05:00 DEBUG ▶ Setting up gRPC daemon ...
-2021-07-16T01:32:12-05:00 DEBUG ▶ gRPC implementation set up.
-2021-07-16T01:32:12-05:00 INFO ▶ gRPC daemon listening on localhost:2525 ...
-2021-07-16T01:32:12-05:00 INFO ▶ HTTP daemon listening on localhost:5099 ...
+[GIN-debug] POST   /echo                     --> github.com/geomyidia/go-svc-conventions/pkg/components/httpd.(*HTTPServer).Echo-fm (1 handlers)
+[GIN-debug] GET    /health                   --> github.com/geomyidia/go-svc-conventions/pkg/components/httpd.(*HTTPServer).Health-fm (1 handlers)
+[GIN-debug] GET    /ping                     --> github.com/geomyidia/go-svc-conventions/pkg/components/httpd.(*HTTPServer).Ping-fm (1 handlers)
+[GIN-debug] GET    /version                  --> github.com/geomyidia/go-svc-conventions/pkg/components/httpd.(*HTTPServer).Version-fm (1 handlers)
+2021-07-23T14:04:27-05:00 DEBUG ▶ HTTP daemon set up.
+2021-07-23T14:04:27-05:00 DEBUG ▶ Setting up gRPC daemon ...
+2021-07-23T14:04:27-05:00 DEBUG ▶ gRPC implementation set up.
+2021-07-23T14:04:27-05:00 INFO ▶ gRPC daemon listening on localhost:2525 ...
+2021-07-23T14:04:27-05:00 INFO ▶ HTTP daemon listening on localhost:5099 ...
+2021-07-23T14:04:27-05:00 DEBUG ▶ Setting up event bus auditor ...
+2021-07-23T14:04:27-05:00 INFO ▶ Auditor is listening for new events ...
+badger 2021/07/23 14:04:27 INFO: All 0 tables opened in 0s
+badger 2021/07/23 14:04:27 INFO: Discard stats nextEmptySlot: 0
+badger 2021/07/23 14:04:27 INFO: Set nextTxnTs to 0
+badger 2021/07/23 14:04:27 INFO: Deleting empty file: ./data/badger/000031.vlog
+2021-07-23T14:04:27-05:00 INFO ▶ Connected to database: ./data/badger
 ```
 
 Or, to run with a different HTTP port:
