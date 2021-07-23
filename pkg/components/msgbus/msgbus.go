@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/gob"
-	"io"
 	"sync"
 
 	"github.com/ThreeDotsLabs/watermill"
@@ -39,27 +38,27 @@ type Event struct {
 
 func Encode(e *Event) []byte {
 	log.Debugf("Attempting to encode %+v ...", e)
-	var encoded bytes.Buffer
-	enc := gob.NewEncoder(&encoded)
+	var buf bytes.Buffer
+	enc := gob.NewEncoder(&buf)
 	err := enc.Encode(e)
 	if err != nil {
 		log.Errorf("Possble issue encoding 'event', err: %#v", err)
 	}
-	log.Debug("Encoded result: ", encoded.String())
-	return encoded.Bytes()
+	log.Debug("Encoded result: ", buf.String())
+	return buf.Bytes()
 }
 
 func Decode(data []byte) *Event {
-	var encoded bytes.Buffer
-	var decoded Event
-	dec := gob.NewDecoder(&encoded)
-	err := dec.Decode(&decoded)
-	if err == io.EOF {
-		log.Warn("Decoding EOF ...")
-	} else if err != nil {
+	log.Debugf("Attempting to decode bytes: %+v ...", data)
+	buf := bytes.NewBuffer(data)
+	decoded := &Event{}
+	dec := gob.NewDecoder(buf)
+	err := dec.Decode(decoded)
+	if err != nil {
 		log.Error("Couldn't decode event: ", err)
 	}
-	return &decoded
+	log.Debugf("Decoded result: %+v", decoded)
+	return decoded
 }
 
 func NewMsgBus() *MsgBus {
