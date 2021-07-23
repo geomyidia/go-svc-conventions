@@ -28,16 +28,22 @@ func main() {
 	a.GRPCD = grpcd.NewGRPCServer(a.Config, a.Bus, a.DB)
 
 	// Set up subscriptions
-	a.Bus.Subscribe("ping", func(event *msgbus.Event) { log.Warnf("Got event: %#v", event) })
-	a.Bus.Subscribe("version", func(event *msgbus.Event) { log.Warnf("Got event: %#v", event) })
-	a.Bus.Subscribe("*", func(event *msgbus.Event) { log.Warnf("Auditor got event: %#v", event) })
+	//a.Bus.Subscribe("ping", func(event *msgbus.Event) { log.Warnf("Got event: %#v", event) })
+	//a.Bus.Subscribe("version", func(event *msgbus.Event) { log.Warnf("Got event: %#v", event) })
 
 	// Create context that listens for the interrupt signal from the OS.
 	ctx, cancel := util.SignalWithContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer cancel()
 	var wg sync.WaitGroup
 
-	// Initialise the HTTP server in its own goroutine and wire to wait group
+	// Initialise the event auditor in its own goroutine and wire to wait group
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		msgbus.SetupAuditor(ctx, a.Bus)
+	}()
+
+	// Initialise the database connection in its own goroutine and wire to wait group
 	wg.Add(1)
 	go func() {
 		defer wg.Done()

@@ -3,7 +3,7 @@ module github.com/geomyidia/go-svc-conventions
 go 1.12
 
 require (
-	github.com/asaskevich/EventBus v0.0.0-20200907212545-49d423059eef
+	github.com/ThreeDotsLabs/watermill v1.1.1
 	github.com/dgraph-io/badger/v3 v3.2103.1
 	github.com/geomyidia/zylog v0.1.5
 	github.com/gin-gonic/gin v1.7.2
