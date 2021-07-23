@@ -22,6 +22,8 @@ func (s *HTTPServer) Echo(ctx *gin.Context) {
 // Health ...
 func (s *HTTPServer) Health(ctx *gin.Context) {
 	log.Debug("Received HTTP health request")
+	event := msgbus.NewEvent("status:health", "DATA")
+	s.Bus.Publish(event)
 	ctx.String(http.StatusOK, fmt.Sprintf("Services: OK\nErrors: NULL\n"))
 }
 
@@ -29,7 +31,7 @@ func (s *HTTPServer) Health(ctx *gin.Context) {
 func (s *HTTPServer) Ping(ctx *gin.Context) {
 	log.Debug("Received HTTP ping request")
 	log.Tracef("Available topics: %+v", s.Bus.Topics())
-	event := msgbus.NewEvent("ping", "DATA")
+	event := msgbus.NewEvent("status:ping", "DATA")
 	s.Bus.Publish(event)
 	ctx.String(http.StatusOK, "pong\n")
 }

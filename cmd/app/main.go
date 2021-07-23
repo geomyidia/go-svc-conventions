@@ -28,11 +28,11 @@ func main() {
 	app.GRPCD = grpcd.NewGRPCServer(app.Config, app.Bus, app.DB)
 
 	// Set up subscriptions
-	//app.Bus.Subscribe("ping", func(event *msgbus.Event) { log.Warnf("Got event: %#v", event) })
-	//app.Bus.Subscribe("version", func(event *msgbus.Event) { log.Warnf("Got event: %#v", event) })
 	var handlers []msgbus.Handler
 	handlers = append(handlers,
 		msgbus.AddHandler("*", msgbus.HandleWildCard),
+		msgbus.AddHandler("status:ping", msgbus.HandlePing),
+		msgbus.AddHandler("status:health", msgbus.HandleHealth),
 	)
 	app.Bus.AddHandlers(handlers)
 

@@ -19,6 +19,8 @@ func (s *GRPCServer) Echo(ctx context.Context, in *pb.GenericData) (*pb.GenericD
 // Health ...
 func (s *GRPCServer) Health(ctx context.Context, in *pb.HealthRequest) (*pb.HealthReply, error) {
 	log.Debugf("Received gRPC health request")
+	event := msgbus.NewEvent("status:health", "DATA")
+	s.Bus.Publish(event)
 	return &pb.HealthReply{Services: "OK", Errors: "NULL"}, nil
 }
 
@@ -26,7 +28,7 @@ func (s *GRPCServer) Health(ctx context.Context, in *pb.HealthRequest) (*pb.Heal
 func (s *GRPCServer) Ping(ctx context.Context, in *pb.PingRequest) (*pb.PingReply, error) {
 	log.Debug("Received gRPC ping request")
 	log.Tracef("Available topics: %+v", s.Bus.Topics())
-	event := msgbus.NewEvent("ping", "DATA")
+	event := msgbus.NewEvent("status:ping", "DATA")
 	s.Bus.Publish(event)
 	return &pb.PingReply{Data: "PONG"}, nil
 }
@@ -34,8 +36,6 @@ func (s *GRPCServer) Ping(ctx context.Context, in *pb.PingRequest) (*pb.PingRepl
 // Version ...
 func (s *GRPCServer) Version(_ context.Context, in *pb.VersionRequest) (*pb.VersionReply, error) {
 	log.Debugf("Received gRPC version request")
-	event := msgbus.NewEvent("version", "DATA")
-	s.Bus.Publish(event)
 	vsn := version.VersionData()
 	return &pb.VersionReply{
 		Version:    vsn.Semantic,
