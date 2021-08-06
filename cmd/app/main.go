@@ -24,8 +24,8 @@ func main() {
 	app.Logger = logging.Load(app.Config)
 	app.Bus = msgbus.NewMsgBus()
 	app.DB = db.NewDB(app.Config, app.Bus)
-	app.HTTPD = httpd.NewHTTPServer(app.Config, app.Bus, app.DB)
 	app.GRPCD = grpcd.NewGRPCServer(app.Config, app.Bus, app.DB)
+	app.HTTPD = httpd.NewHTTPServer(app.Config, app.GRPCD, app.Bus, app.DB)
 
 	// Set up subscriptions
 	var handlers []msgbus.Handler

@@ -10,7 +10,7 @@ database:
     directory: ./data  
 logging:
   colored: true
-  level: debug
+  level: trace
   output: stdout
   report-caller: false
 client-logging:
