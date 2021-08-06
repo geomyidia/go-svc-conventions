@@ -31,6 +31,7 @@ func main() {
 	var handlers []msgbus.Handler
 	handlers = append(handlers,
 		msgbus.AddHandler("*", msgbus.HandleWildCard),
+		//msgbus.AddHandler("status:*", msgbus.HandleStatusWildCard),
 		msgbus.AddHandler("status:ping", msgbus.HandlePing),
 		msgbus.AddHandler("status:health", msgbus.HandleHealth),
 	)

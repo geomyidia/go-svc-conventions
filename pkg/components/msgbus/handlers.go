@@ -13,6 +13,14 @@ func HandleWildCard(msg *message.Message) error {
 	return nil
 }
 
+func HandleStatusWildCard(msg *message.Message) error {
+	log.Warnf("Auditor got status event: %+v", Decode(msg.Payload))
+	// we need to Acknowledge that we received and processed the message,
+	// otherwise, it will be resent over and over again.
+	msg.Ack()
+	return nil
+}
+
 func HandlePing(msg *message.Message) error {
 	log.Warnf("Ping listeners got event: %+v", Decode(msg.Payload))
 	// we need to Acknowledge that we received and processed the message,
