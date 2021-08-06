@@ -6,6 +6,7 @@ import (
 
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 
 	pb "github.com/geomyidia/go-svc-conventions/api"
 	"github.com/geomyidia/go-svc-conventions/pkg/components/config"
@@ -31,7 +32,10 @@ func NewGRPCServer(cfg *config.Config, bus *msgbus.MsgBus, db *db.DB) *GRPCServe
 		DB:   db,
 	}
 	gs := grpc.NewServer()
+	// Register reflection service on gRPC server.
+	reflection.Register(gs)
 	s.RegisterServer(gs)
+
 	s.Server = gs
 	log.Debug("gRPC implementation set up.")
 	return s
