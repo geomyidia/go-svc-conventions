@@ -35,6 +35,7 @@ To the last point, (and regardless of what they are actually called or where the
 ## Build and Run
 
 ```shell
+$ export PATH=$PATH:~/go/bin
 $ make
 $ make run
 ```
